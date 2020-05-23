@@ -19,6 +19,8 @@ import datetime
 
 import forms
 import models
+import findRides
+import reserveRides
 
 #Grace's global variables
 rideToEdit = None
@@ -29,137 +31,25 @@ bp = Blueprint('rides', __name__, url_prefix = '/rides', template_folder = 'temp
 
 @bp.route('/')
 def home_page():
-    if 'driver' in session:
-        print(session['driver'])
     return render_template('home.html')
 
+
+#NOTE: SHOULDN'T NEED BOTH FORMS
 @bp.route('/find-rides', methods=('GET', 'POST'))
-def find_rides():
-    form = forms.SearchFormFactory()
-    #errors = [] cant redirect after using- need to return template
-    results = []
-    reserveForm = forms.ReserveRideFormFactory() 
-    print("in find rides")
-    print("="*20)
-    readyToReserve = False
-    #search prepared statements
+def find_rides_main():
+    spotsNeeded,searchForm,reserveForm,results = findRides.find_rides()
+    #redo with validators
+    if searchForm==None:
+        return redirect(url_for('rides.find_rides_main'))
+    return render_template('find-rides.html', searchForm=searchForm, reserveForm=reserveForm, results=results, spotsNeeded=spotsNeeded) 
 
-    if 'logged_in' not in session:
-        if session['logged_in']==False:
-            flash("You are not logged in. Redirecting you to log in.")
-            return redirect(url_for('rides.log_in'))
-
-    if 'logged_in' in session and session['logged_in']==False:
-        flash("You are not logged in. Redirecting you to log in.")
-        return redirect(url_for('rides.log_in'))     
-
-    else:
-        if form.validate_on_submit():
-            db.session.execute('''PREPARE SearchAll (varchar, date, integer) AS SELECT * FROM Ride WHERE origin = $1 AND date = $2 and seats_available >= $3;''')
-            db.session.execute('''PREPARE Search (varchar, varchar, date, integer) AS SELECT * FROM Ride WHERE origin = $1 AND destination = $2 AND date = $3 and seats_available >= $4;''')
-            print("find form valid and submitted")
-            origin_city = request.form['origin_city']
-            destination = request.form['destination']
-            date = request.form['date']
-            spots_needed = request.form['spots_needed']
-
-            print("data gathered")
-            print("="*50)
-            print(origin_city)
-            print(destination)
-            print(date)
-            print(spots_needed)
-
-            if origin_city == destination:
-                flash("Origin and destination cannot be the same.")
-                return redirect(url_for('rides.find_rides'))
-
-            if date < str(datetime.date.today()):
-                flash("Date entered must be after today's date.")
-                return redirect(url_for('rides.find_rides'))
-
-            resultsTemp = None
-            if destination == "Search All":
-                # resultsTemp = db.session.query(models.Ride)\
-                #     .filter(models.Ride.origin == origin_city)\
-                #     .filter(models.Ride.date == date)\
-                #     .filter(models.Ride.seats_available >= spots_needed)
-                resultsTemp = db.session.execute('EXECUTE SearchAll(:origin_city, :date, :spots_needed)',\
-                    {"origin_city":origin_city, "date":date, "spots_needed":spots_needed})
-                db.session.execute('DEALLOCATE SearchALL')
-                db.session.execute('DEALLOCATE Search')
-            else:
-                # resultsTemp = db.session.query(models.Ride)\
-                #     .filter(models.Ride.origin == origin_city)\
-                #     .filter(models.Ride.destination == destination)\
-                #     .filter(models.Ride.date == date)\
-                #     .filter(models.Ride.seats_available >= spots_needed)
-                resultsTemp = db.session.execute('EXECUTE Search(:origin_city, :destination, :date, :spots_needed)',\
-                    {"origin_city":origin_city, "destination":destination, "date":date, "spots_needed":spots_needed})
-                db.session.execute('DEALLOCATE SearchALL')
-                db.session.execute('DEALLOCATE Search')
-            myRides = db.session.query(models.Ride).filter(models.Ride.driver_netid == session['netid'])
-            myRidesNumbers = []
-            #could be simplified 
-            for ride in myRides:
-                myRidesNumbers.append(ride.ride_no)
-            for ride in resultsTemp:
-                if not (ride.ride_no in myRidesNumbers):
-                    results.append(ride)
-                    print(ride)
-
-            print("PRINTING RESULTS")
-            for result in results:
-                print(result.ride_no)
-            print("DONE PRINTING RESULTS")
-            #results = [x.__dict__ for x in results] #what does this do?
-            return render_template('find-rides.html', form=form, reserveForm=reserveForm, results=results, readyToReserve=readyToReserve)
-        #technically don't need if form always validating on submit
-        return render_template('find-rides.html', form=form, reserveForm = reserveForm, results = results) 
-
-
-#RETURN RENDER TEMPLATE
-@bp.route('/reserve-rides', methods=('GET', 'POST'))      
-def reserveRide():
-    print("in reserve rides")
-    print("="*20)
-    reserveForm = forms.ReserveRideFormFactory()
-    form = forms.SearchFormFactory()
-    #errors = [] add into return statement too
-
-    if reserveForm.validate_on_submit():
-        print("reserve form valid and submit")
-        rideno = int(request.form['rideNumber'])
-        spots_needed = int(request.form['spots_needed'])
-        notes = request.form['notes']
-       
-        edit_ride = db.session.query(models.Ride).filter(models.Ride.ride_no == rideno).one()
-        #dont allow to book ride if requesting more spots than there is available
-        if spots_needed > edit_ride.seats_available:
-            flash("Not enough spots in this ride as you changed spots needed from your initial request.")
-            return redirect(url_for('rides.find_rides'))
-            #errors.append("Not enough spots in this ride as you changed spots needed from your initial request.")- ideal
-            #return render_template('find-rides.html', form=form, reserveForm = reserveForm, errors=errors)
-
-        #dont allow to book ride if they already have booked the same ride
-        previousReservationTemp = None
-        previousReservationTemp = db.session.query(models.Reserve).filter(models.Reserve.ride_no == rideno).filter(models.Reserve.rider_netid == session['netid']).first()
-        if previousReservationTemp != None:
-            flash("You have already reserved this ride. Please edit your number of spots in the account page.")
-            return redirect(url_for('rides.find_rides')) 
-        print(edit_ride.seats_available - spots_needed) 
-
-        #update seats available in ride
-        edit_ride.seats_available = edit_ride.seats_available - spots_needed
-        db.session.commit()
-
-        #create entry in Reserve
-        newEntry = models.Reserve(rider_netid = session['netid'], ride_no = rideno, seats_needed = spots_needed, note = notes)
-        db.session.add(newEntry)
-        db.session.commit()
-        flash("Successfully booked.")
-    print("end of find rides")
-    return render_template('find-rides.html', form=form, reserveForm = reserveForm)
+@bp.route('/reserve-rides', methods=('GET', 'POST'))    
+def reserveRide_main():  
+#def reserveRide_main(rideNo, spotsNeeded):
+    rideNo=4161
+    spotsNeeded=1
+    ride,searchForm,reserveForm=reserveRides.reserve_rides(rideNo, spotsNeeded)
+    return render_template('reserve-rides.html', searchForm=searchForm, reserveForm = reserveForm, ride=ride)
 
 
 @bp.route('/list-rides', methods=['GET','POST'])

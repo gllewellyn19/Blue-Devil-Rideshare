@@ -18,23 +18,24 @@
         {% endwith %}
 
         <div class="col-sm-8 text-left"> 
-            <h1>Search for Rides</h1>
+            <h1>Search for New Rides</h1>
+            <p>Rides posted or reserved by you will not appear here. For these rides visit your <a href="{{url_for('rides.account')}}"> account page </a></p>
             <hr>
             <form method="post" action = "/rides/find-rides" onsubmit="return validateForm();">
-                {{ form.csrf_token }}
+                {{ searchForm.csrf_token }}
 
-                {{ form.origin_city.label }}
-                {{ form.origin_city }}
-                {{ form.destination.label }}
-                {{ form.destination }}
+                {{ searchForm.origin_city.label }}
+                {{ searchForm.origin_city }}
+                {{ searchForm.destination.label }}
+                {{ searchForm.destination }}
                 <br>
-                {{ form.date.label }}
-                {{ form.date (placeholder='YYYY-MM-DD') }}
+                {{ searchForm.date.label }}
+                {{ searchForm.date (placeholder='YYYY-MM-DD') }}
 
-                {{ form.spots_needed.label }}
-                {{ form.spots_needed }}
+                {{ searchForm.spots_needed.label }}
+                {{ searchForm.spots_needed }}
                 <br>
-                {{ form.submit }}
+                {{ searchForm.submit }}
             </form>
             <hr>
             <hr>
@@ -44,7 +45,7 @@
                 <!-- <p> Here they are {{results}} </p> -->
                 <table style="border-collapse: collapse; width: 100%">
                     <tr style="border: 1px solid black;">
-                        <th style="width: 3%; border: 1px solid black; text-align: center"> Ride # </th>
+                        <th style="width: 10%; border: 1px solid black; text-align: center"> Ride Number </th>
                         <th style="width: 15%; border: 1px solid black; text-align: center"> Origin </th>
                         <th style="width: 15%; border: 1px solid black; text-align: center"> Destination </th>
                         <th style="width: 12%; border: 1px solid black; text-align: center"> Date </th>
@@ -52,11 +53,11 @@
                         <th style="width: 20%; border: 1px solid black; text-align: center"> Latest Departure </th>
                         <th style="width: 8%; border: 1px solid black; text-align: center"> Spots </th>
                         <th style="width: 10%; border: 1px solid black; text-align: center"> Comments </th>
-                        <th> </th>
+                        <th style="width: 10%; border: 1px solid black; text-align: center"> Book </th>
                     </tr>
                     {% for item in results %}
                     <tr>
-                        <td style="border: 1px solid black; padding: 3px" data-rideno="{{item.ride_no}}"> {{ item.ride_no }} </td>
+                        <td style="border: 1px solid black; padding: 3px"> {{ item.ride_no }} </td>
                         <td style="border: 1px solid black; padding: 3px"> {{ item.origin }} </td>
                         <td style="border: 1px solid black; padding: 3px"> {{ item.destination }} </td>
                         <td style="border: 1px solid black; padding: 3px"> {{ item.date }} </td>
@@ -64,69 +65,16 @@
                         <td style="border: 1px solid black; padding: 3px"> {{ item.latest_time }} </td>
                         <td style="border: 1px solid black; padding: 3px"> {{ item.seats_available }} </td>
                         <td style="border: 1px solid black; padding: 3px"> {{ item.comments }} </td>
-                        <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-rideno="{{item.ride_no}}" data-dest="{{item.destination}}"> Book </button></td>
-                    </tr>
+                        <!--<td><a href="{{url_for('rides.reserveRide_main', rideNo=item.ride_no, spotsNeeded=spotsNeeded)}}"> Reserve Ride </a></td>-->
+                        <td><a href="{{url_for('rides.reserveRide_main')}}"> Reserve Ride </a></td>
+                        <!--<td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-rideno="{{item.ride_no}}" data-dest="{{item.destination}}"> Book </button></td>-->
+                        </tr>
                     {% endfor %}
                 </table>
             </div>
         </div>
 
-        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                <h3 class="modal-title" id="exampleModalLabel">Reserve Ride</h3>
-            </div>
-            <div class="modal-body">  
-                <form id="reserveForm" method="post" action = "/rides/reserve-rides">
-                    {{ reserveForm.csrf_token }}
-                    {{ reserveForm.rideNumber(class_="rideno") }}
-                    <br>
-                    {{ form.origin_city.label }}
-                    <br>
-                    {{ form.origin_city.data }}
-                    <br>
-                    <br>
-                    {{ form.destination.label }} <p class="dest"></p>
-                    {{ form.date.label }}
-                    <br>
-                    {{ form.date.data }}
-                    <br>
-                    <br>
-                    {{ reserveForm.spots_needed.label }}
-                    <br>
-                    {{ reserveForm.spots_needed }}
-                    <br>
-                    <br>
-                    {{ reserveForm.notes.label }}
-                    <br>
-                    {{ reserveForm.notes }}
-                    <br>
-                    <br>
-                    {{ reserveForm.submit }}
-                    <br>
-                    <br>
-                </form>
-            </div>
-            </div>
-        </div>
-        </div>
-        <script>
-           
-
-            $('#exampleModal').on('show.bs.modal', function (event) {
-                var button = $(event.relatedTarget); // Button that triggered the modal
-                window.ride_num = button.data('rideno'); // Extract info from data-* attributes
-                var dest = button.data('dest');
-                var modal = $(this);
-                $('p.dest').text(dest);
-                $('.rideno').val(window.ride_num);
-            });
-
-        </script>
+       
         {% endif %}
         <div class="col-sm-8 text-left"> 
             {% if results == [] %}

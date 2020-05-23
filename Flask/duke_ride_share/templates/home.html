@@ -32,7 +32,7 @@
         <ul class="nav navbar-nav navbar-right">
           <li><a href="{{url_for('rides.home_page')}}"> Home </a></li>
           {% if session['logged_in'] %}
-          <li><a href="{{url_for('rides.find_rides')}}"> Find Rides </a></li>
+          <li><a href="{{url_for('rides.find_rides_main')}}"> Find Rides </a></li>
           {% else %}
           <li><a href="{{url_for('rides.sign_up')}}"> Sign Up </a></li>
           {% endif %}

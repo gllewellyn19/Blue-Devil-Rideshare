@@ -14,6 +14,14 @@ You will be prompted to enter a password. The password is: 316project.
 From there, you can use commands such as \dt to view the tables in our database, \d+ table_name to view a summary of a table, or \l for a list of databases. You can also create and modify tables, run queries, create triggers, etc. in the command line.
 We created our tables by copying and pasting our create.sql file into the command line. We did the same with our insert statements. 
 
+CHANGE LATER:
+To run the website:
+
+$ cd CS316-Blue-Devil-Ride-Share
+$ cd Flask
+$ export FLASK_APP=duke_ride_share (note for Windows the command is set FLASK_APP=duke_ride_share)
+$ flask run
+
 To deploy the website:
 
 Access the group VM above (password available upon request - please contact calleigh.smith@duke.edu). On that VM is a docker that runs our website. We requested an alias for our site through Duke's Colab: bluedevilrideshare.colab.duke.edu

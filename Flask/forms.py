@@ -3,7 +3,7 @@ from wtforms import Form, BooleanField, StringField, HiddenField, IntegerField, 
 from wtforms_components import TimeField, DateRange
 from wtforms.validators import InputRequired, Length, NumberRange, Regexp, Email, DataRequired, Optional, EqualTo, ValidationError
 from wtforms.fields.html5 import DateTimeLocalField, DateField
-from app import db
+from app import db #???
 import models
 import datetime
 
@@ -199,13 +199,13 @@ class EditRideFactory(FlaskForm):
     submit = SubmitField("Save")
 
 class EditReservationFactory(FlaskForm):
-    spots_needed = IntegerField("Spots Needed:", validators = [InputRequired(message='You must enter spots needed')])
+    spots_needed = IntegerField("Spots Needed:", validators = [InputRequired(message='You must enter spots needed')]) 
     cancel = SelectField("Would you like to cancel your reservation for this ride?", choices = [('No', 'No'), ('Yes', 'Yes')])
     submit = SubmitField("Save")
 
 class ReserveRideFormFactory(FlaskForm):
-    rideNumber = HiddenField("Ride #", id="input-rideno")
-    spots_needed = IntegerField("Spots Needed:", validators = [InputRequired(message='You must enter the number of seats needed')])
+    #rideNumber = HiddenField("Ride #", id="input-rideno")
+    #spots_needed = IntegerField("Spots Needed:", validators = [InputRequired(message='You must enter the number of seats needed')]) 
     notes = StringField("Notes:", validators=[Optional()])
     submit = SubmitField("Request Ride")
 
