@@ -1,5 +1,5 @@
 from database import db
-import datetime #remove later
+import datetime 
 from datetime import date
 from flask import Flask, request, session, flash, redirect, url_for
 
@@ -14,10 +14,12 @@ def find_rides():
 
     #search prepared statements 
     if searchForm.validate_on_submit():
-        db.session.execute('''PREPARE SearchAll (varchar, date, integer, varchar) AS SELECT * FROM Ride WHERE origin = $1
-            AND date = $2 and seats_available >= $3 and driver_netid!=$4;''')
-        db.session.execute('''PREPARE Search (varchar, varchar, date, integer, varchar) AS SELECT * FROM Ride
-            WHERE origin = $1 AND destination = $2 AND date = $3 and seats_available >= $4 and driver_netid!=$5;''')
+        db.session.execute('''PREPARE SearchAll (varchar, date, integer, varchar) AS SELECT * FROM Ride r WHERE r.origin = $1\
+            AND r.date = $2 and r.seats_available >= $3 and r.driver_netid!=$4\
+            AND NOT EXISTS (SELECT * FROM Reserve rev WHERE rev.ride_no=r.ride_no AND rev.rider_netid=$4);''') 
+        db.session.execute('''PREPARE Search (varchar, varchar, date, integer, varchar) AS SELECT * FROM Ride r\
+            WHERE r.origin = $1 AND r.destination = $2 AND r.date = $3 and r.seats_available >= $4 and r.driver_netid!=$5\
+            AND NOT EXISTS (SELECT * FROM Reserve rev WHERE rev.ride_no=r.ride_no AND rev.rider_netid=$5);''')
         origin_city = request.form['origin_city']
         destination = request.form['destination']
         date = request.form['date']
@@ -46,15 +48,5 @@ def find_rides():
                 {"origin_city":origin_city, "destination":destination, "date":date, "spots_needed":spots_needed, "driver_netid":session['netid']}))
             db.session.execute('DEALLOCATE SearchALL')
             db.session.execute('DEALLOCATE Search')
-
-        #NOTE: Danai does this look bad?
-        #IMPLEMENT
-        resultsToReturn=[]
-        for result in results:
-            previousReservation = db.session.query(models.Reserve).filter(models.Reserve.ride_no == result.ride_no, models.Reserve.rider_netid == session['netid']).first()
-            if previousReservation==None:
-                resultsToReturn.append(result)
-        
-
 
     return spotsNeeded,searchForm,reserveForm,results

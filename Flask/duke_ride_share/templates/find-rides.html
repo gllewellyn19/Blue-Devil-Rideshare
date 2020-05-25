@@ -19,7 +19,7 @@
 
         <div class="col-sm-8 text-left"> 
             <h1>Search for New Rides</h1>
-            <p>Rides posted or reserved by you will not appear here. For these rides visit your <a href="{{url_for('rides.account')}}"> account page </a></p>
+            <p>Rides posted or reserved by you will not appear here. For these rides visit your <a href="{{url_for('rides.account_main')}}"> account page </a></p>
             <hr>
             <form method="post" action = "/rides/find-rides" onsubmit="return validateForm();">
                 {{ searchForm.csrf_token }}

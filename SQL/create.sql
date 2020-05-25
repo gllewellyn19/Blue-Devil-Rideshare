@@ -3,9 +3,8 @@ CREATE TABLE rideshare_user
  name VARCHAR(256) NOT NULL,
  duke_email VARCHAR(256) NOT NULL,
  phone_number BIGINT NOT NULL,
- affiliation VARCHAR(256) NOT NULL CHECK(affiliation IN ('Undergraduate', 'Graduate')),
- school VARCHAR(256) NOT NULL CHECK(school IN ('Trinity', 'Pratt', 'Nicolas', 'Law', 'Fuqua', 
-                'Nursing', 'Medicine', 'Other')),
+ affiliation VARCHAR(256) NOT NULL,
+ school VARCHAR(256) NOT NULL,
  password VARCHAR(256) NOT NULL);
 
 CREATE TABLE Driver

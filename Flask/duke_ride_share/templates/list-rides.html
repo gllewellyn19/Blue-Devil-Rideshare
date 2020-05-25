@@ -21,24 +21,23 @@
 
             {% for message in form.gas_price.errors %}
             <div><b>{{ message }}</b></div>
-         {% endfor %}
+            {% endfor %}
 
-         {% for message in form.destination.errors %}
-         <div><b>{{ message }}</b></div>
-      {% endfor %}
+            {% for message in form.destination.errors %}
+            <div><b>{{ message }}</b></div>
+            {% endfor %}
 
-      {% for message in form.date.errors %}
-      <div><b>{{ message }}</b></div>
-   {% endfor %}
+            {% for message in form.date.errors %}
+            <div><b>{{ message }}</b></div>
+            {% endfor %}
 
+            {% for message in form.earliest_departure.errors %}
+            <div><b>{{ message }}</b></div>
+            {% endfor %}
 
-   {% for message in form.earliest_departure.errors %}
-   <div><b>{{ message }}</b></div>
-{% endfor %}
-
-{% for message in form.latest_departure.errors %}
-<div><b>{{ message }}</b></div>
-{% endfor %}
+            {% for message in form.latest_departure.errors %}
+            <div><b>{{ message }}</b></div>
+            {% endfor %}
 
             <form action = "/rides/list-rides"  onsubmit="return validateForm();" method="post">
                    <div style = font-size:14px; font-weight:bold; margin-left:150px;>
@@ -69,7 +68,7 @@
                    <br>
                        
                    {{ form.gas_price.label }}<br>
-                   {{ form.gas_price (placeholder='5.00')}}
+                   {{ form.gas_price }}
                    <br>
                        
                    {{ form.comments.label }}<br>

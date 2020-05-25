@@ -34,19 +34,19 @@
           {% if session['logged_in'] %}
           <li><a href="{{url_for('rides.find_rides_main')}}"> Find Rides </a></li>
           {% else %}
-          <li><a href="{{url_for('rides.sign_up')}}"> Sign Up </a></li>
+          <li><a href="{{url_for('rides.sign_up_main')}}"> Sign Up </a></li>
           {% endif %}
           {% if (session['logged_in'] and session['driver']) %}
-          <li><a href="{{url_for('rides.list_rides')}}"> List Rides </a></li>
+          <li><a href="{{url_for('rides.list_rides_main')}}"> List Rides </a></li>
           {% endif %}
           {% if (session['logged_in'] and session['driver']==False) %}
-          <li><a href="{{url_for('rides.register_driver')}}"> Register as Driver </a></li>
+          <li><a href="{{url_for('rides.register_driver_main')}}"> Register as Driver </a></li>
           {% endif %}
           {% if session['logged_in'] %}
-          <li><a href="{{url_for('rides.account')}}"> Account </a></li>
+          <li><a href="{{url_for('rides.account_main')}}"> Account </a></li>
           <li><a href="{{url_for('rides.log_out')}}"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
           {% else %}
-          <li><a href="{{url_for('rides.log_in')}}"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+          <li><a href="{{url_for('rides.log_in_main')}}"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
           {% endif %}
           
         </ul>

@@ -21,8 +21,12 @@ import forms
 import models
 import findRides
 import reserveRides
+import listRides
+import signUp
+import registerDriver
+import logIn
 
-#Grace's global variables
+#global variables
 rideToEdit = None
 reservationToEdit = None
 rideToEditTime = None
@@ -53,121 +57,31 @@ def reserveRide_main():
 
 
 @bp.route('/list-rides', methods=['GET','POST'])
-def list_rides():
+def list_rides_main():
     form = forms.ListRideFormFactory()
-    driver = models.Driver.query.filter_by(netid=session['netid']).first() 
-    #driver = db.session.query(models.Driver).filter(models.Driver.netid == session['netid']).first()  
-    #list prepared statements
-    
-    if form.validate_on_submit():
-        db.session.execute('''PREPARE List (varchar, varchar, varchar, date, time, time, integer, float, varchar) AS INSERT INTO Ride VALUES (DEFAULT, $1, $2, $3, $4, $5, $6, $7, $8, $9);''')
-        driver_netid = session['netid']
-        destination = request.form['destination']
-        origin_city = request.form['origin_city']
-        date = request.form['date']
-        #could simplify this with a where statement 
-        myRides = db.session.query(models.Ride).filter(models.Ride.driver_netid == session['netid'])
-        for ride in myRides:
-            if str(date) == str(ride.date):
-                flash("You already are driving a ride on this day.")
-                return redirect(url_for('rides.list_rides'))
-        #should have join here like prepared statement in accounts- get list of reservations with date then do:
-        #myReservations = ?? prepared statement
-        #for ride in myReservations:
-            #if date == ride.date:
-                #flash("You already have a reservation on this day.")
-                #return redirect(url_for('rides.list_rides'))
-
-        earliest_departure = request.form['earliest_departure']
-        latest_departure = request.form['latest_departure']
-        seats_available = request.form['seats_available']
-        gas_price = request.form['gas_price']
-        if gas_price == '':
-            gas_price = None
-        comments = request.form['comments']
-        if comments=='':
-            comments = None
-        session['driver'] = True
-        newride = db.session.execute('EXECUTE List(:origin_city, :destination, :driver_netid, :date, :earliest_departure, :latest_departure, :seats_available, :gas_price, :comments)',\
-                {"origin_city":origin_city, "destination":destination, "driver_netid":driver_netid, "date":date, "earliest_departure":earliest_departure, "latest_departure":latest_departure, "seats_available":seats_available, "gas_price":gas_price, "comments":comments})
-        #newride = models.Ride(driver_netid=driver_netid, destination=destination, origin=origin_city, date=date, earliest_time=earliest_departure, latest_time=latest_departure, seats_available=seats_available, gas_price=gas_price, comments=comments)
-        #db.session.add(newride)
-        db.session.commit()
-        db.session.execute('DEALLOCATE List')
-        flash("Ride successfully listed.")
-        return redirect(url_for('rides.home_page'))
+    listRides.list_rides(form)
     return render_template('list-rides.html', form=form)
 
 @bp.route('/sign-up', methods=['GET','POST'])
-def sign_up():
-    form = forms.RegisterFormFactory()
-
-    if form.validate_on_submit():
-        netid = request.form['netid']
-        name = request.form['name']
-        duke_email = request.form['duke_email']
-        phone_number = request.form['phone_number']
-        password = request.form['password']
-        affiliation = request.form['affiliation_sel']
-        school = request.form['school']
-
-        if len(str(phone_number))<6 or len(str(phone_number))>10:
-            flash("Your phone number must be at least 6 characters and no more than 10.")
-            return redirect(url_for('rides.sign_up'))
-        existingUsers = db.session.query(models.Rideshare_user).filter(models.Rideshare_user.netid == netid)
-        if existingUsers.first() != None:
-            flash("An account with this netid already exists. Please log in.")
-            return redirect(url_for('rides.log_in'))
-
-        register = models.Rideshare_user(netid=netid, name=name, duke_email=duke_email, phone_number=phone_number, password=password, affiliation=affiliation, school=school)
-        db.session.add(register)
-        db.session.commit()
-
-        return redirect(url_for('rides.log_in'))
-        #return render_template('sign-up.html', form=form)
-    return render_template('sign-up.html', form=form)
+def sign_up_main():
+    #NOTE: maybe change this return statement
+    signupForm = forms.RegisterFormFactory()
+    toReturn = signUp.sign_up(signupForm)
+    return toReturn
+    #return render_template('sign-up.html', form=signupForm)
 
 @bp.route('/register-driver', methods=['GET','POST'])
-def register_driver():
-    form = forms.RegisterDriverFormFactory()
-    driver = models.Driver.query.filter_by(netid=session['netid']).first() #dont need
-    #driver = db.session.query(models.Driver).filter(models.Driver.netid == session['netid']).first()
-    if form.validate_on_submit():
-        netid = session['netid']
-        license_no = request.form['license_no']
-        license_plate_no = request.form['license_plate_no']
-        plate_state = request.form['plate_state']
-
-        register = models.Driver(netid=netid, license_no=license_no, license_plate_no=license_plate_no, plate_state=plate_state)
-        session['driver'] = True # what does this do?
-        db.session.add(register)
-        db.session.commit()
-        return redirect(url_for('rides.list_rides'))
-    return render_template('register-driver.html', form=form)
+def register_driver_main():
+    registerDriverForm = forms.RegisterDriverFormFactory()
+    returnStatement = registerDriver.register_driver(registerDriverForm)
+    return returnStatement
     
 
 @bp.route('/log-in', methods=['GET','POST'])
-def log_in():
-    error = None
-    if request.method == 'POST':
-        netid = request.form.get('netid')
-        password = request.form.get('password')
-        user = models.Rideshare_user.query.filter_by(netid=netid).first()
-        #user = db.session.query(models.Rideshare_user).filter(models.Rideshare_user.netid == session['netid']).first()
-
-        if not user or not (user.password==password):
-            error = 'Invalid Credentials. Please try again.'
-        else:
-            session['logged_in'] = True
-            session['netid'] = netid
-            driver = models.Driver.query.filter_by(netid=session['netid']).first()
-            #driver = db.session.query(models.Driver).filter(models.Driver.netid == session['netid']).first()
-            if not driver:
-                session['driver'] = False
-            else:
-                session['driver'] = True
-            return redirect(url_for('rides.home_page'))
-    return render_template('log-in.html', error=error)
+def log_in_main():
+    toReturnStatement = logIn.log_in()
+    return toReturnStatement
+    
 
 @bp.route("/logout")
 def log_out():
@@ -177,7 +91,7 @@ def log_out():
     return home_page()
 
 @bp.route('/account', methods=('GET', 'POST'))
-def account():
+def account_main():
     #account prepared statements
     db.session.execute('''PREPARE RidesPosted (varchar) AS SELECT * FROM Ride WHERE driver_netid = $1 ORDER BY date DESC;''')
     db.session.execute('''PREPARE Reservations (varchar) AS SELECT * FROM Reserve R1, Ride R2 WHERE R1.rider_netid = $1 AND R1.ride_no = R2.ride_no ORDER BY date DESC;''')

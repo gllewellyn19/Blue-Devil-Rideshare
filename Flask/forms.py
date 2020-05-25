@@ -101,12 +101,12 @@ class GreaterThan(object):  # --> Change to 'GreaterThan'
 
             raise ValidationError(message % d)
 
-def school_choices(affiliation):
-    """
+"""def school_choices(affiliation):
+    
     return a list containing school choices based on the given affiliation
 
     used to limit the choice of schools to those related to the current affiliation
-    """
+    
     if affiliation == 'Undergraduate':
         choices = [('Pratt', 'Pratt'), ('Trinity', 'Trinity')]
         return(choices)
@@ -114,7 +114,7 @@ def school_choices(affiliation):
         choices = [('Fuqua', 'Fuqua'), ('Law', 'Law'), ('Medicine', 'Medicine'), ('Nicholas', 'Nicholas'), ('Nursing', 'Nursing'), ('Other', 'Other')]
         return(choices)
     else:
-        return [('Please select your affiliation.')]
+        return [('Please select your affiliation.')]"""
  
 class RegisterFormFactory(FlaskForm):
     netid = StringField("NetID:", validators = [InputRequired(message='You must enter your NetID'), Length(min=4, max=7, message='Your NetID must be between 4 to 7 characters'), Regexp('^[a-zA-Z]{2,3}\d{2,3}$', message = 'Please enter a valid netid.')])
