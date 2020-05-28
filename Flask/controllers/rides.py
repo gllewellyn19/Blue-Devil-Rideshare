@@ -25,6 +25,7 @@ import listRides
 import signUp
 import registerDriver
 import logIn
+import account
 
 #global variables
 rideToEdit = None
@@ -92,58 +93,8 @@ def log_out():
 
 @bp.route('/account', methods=('GET', 'POST'))
 def account_main():
-    #account prepared statements
-    db.session.execute('''PREPARE RidesPosted (varchar) AS SELECT * FROM Ride WHERE driver_netid = $1 ORDER BY date DESC;''')
-    db.session.execute('''PREPARE Reservations (varchar) AS SELECT * FROM Reserve R1, Ride R2 WHERE R1.rider_netid = $1 AND R1.ride_no = R2.ride_no ORDER BY date DESC;''')
-
-    #user = models.Rideshare_user.query.filter_by(netid=session['netid']).first()
-    user = db.session.query(models.Rideshare_user).filter(models.Rideshare_user.netid == session['netid']).first()
-    #ridesListed = models.Ride.query.filter_by(driver_netid=session['netid']).order_by(models.Ride.date.desc())
-    ridesL = db.session.execute('EXECUTE RidesPosted(:driver_netid)', {"driver_netid":session['netid']})
-
-    ridesListed = []
-    row = ridesL.fetchone()
-    ridesListed.append(row)
-    while row is not None:
-        row = ridesL.fetchone()
-        ridesListed.append(row)
-    
-    res = db.session.execute('EXECUTE Reservations(:driver_netid)', {"driver_netid":session['netid']})
-
-    reservations = []
-    row = res.fetchone()
-    reservations.append(row)
-    while row is not None:
-        row = res.fetchone()
-        reservations.append(row)
-
-    #ridesReservedTemp = models.Reserve.query.filter_by(rider_netid=session['netid']).order_by(models.Reserve.ride_no.desc())
-    #reservations = models.Reserve.query.join(models.Ride).filter_by(models.Reserve.ride_no=models.Ride.ride_no).filter_by(models.Reserve.rider_netid=session['netid'])
-    #reservationsTemp = models.Ride.query.join(models.Ride.ride_no == models.Reserve.ride_no)
-    #reservations = db.session.query(models.Reserve).join(models.Ride).add_columns(models.Ride.comments, models.Ride.origin, models.Ride.date, models.Ride.destination, models.Ride.driver_netid, models.Ride.earliest_time, models.Ride.latest_time, models.Ride.seats_available, models.Ride.gas_price, models.Reserve.rider_netid, models.Reserve.ride_no, models.Reserve.note, models.Reserve.seats_needed).filter(models.Reserve.rider_netid == session['netid']).order_by(models.Ride.date.desc())
-    #reservations = []
-
-    #for ride in reservationsTemp:
-    #    if ride.rider_netid == session['netid']:
-    #        reservations.append(ride)
-
-    #userList = users.query.join(friendships, users.id==friendships.user_id).add_columns(users.userId, users.name, users.email, friends.userId, friendId)\
-    #.filter(users.id == friendships.friend_id).filter(friendships.user_id == userID)\
-    #ridesReserved = []
-    #for ride in ridesReservedTemp:
-        #ridesReserved.append(models.Ride.query.filter_by(ride_no=ride.ride_no).first()) 
-    #ridesReservedFinal = ridesReserved.order_by(models.Ride.date.desc())
-    #SORT rides listed and rides reserved by date- really hard
-
-    #driver = models.Driver.query.filter_by(netid=session['netid']).first()
-    driver = db.session.query(models.Driver).filter(models.Driver.netid == session['netid']).first()
-    # if ridesListed.first()==None:
-    #     ridesListed = None
-    # if reservations.first() == None:
-    #     reservations = None
-    db.session.execute('DEALLOCATE RidesPosted')
-    db.session.execute('DEALLOCATE Reservations')
-    return render_template('account.html', user=user, driver=driver, ridesListed=ridesListed, reservations=reservations)
+    user,driver,ridesListed,reservations,rideToday,revToday = account.account()
+    return render_template('account.html', user=user, driver=driver, ridesListed=ridesListed, reservations=reservations, rideToday=rideToday,revToday=revToday)
 
 @bp.route('/edit-info', methods=('GET', 'POST'))
 def editInfo():

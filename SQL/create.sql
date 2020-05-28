@@ -58,7 +58,7 @@ CREATE TRIGGER TG_Driver_own_rider
 
 ------
 
-CREATE FUNCTION TF_Not_enough_seats() RETURNS TRIGGER AS $$
+/*CREATE FUNCTION TF_Not_enough_seats() RETURNS TRIGGER AS $$
 BEGIN
   IF EXISTS (SELECT * FROM Ride R
       WHERE NEW.ride_no = R.ride_no
@@ -74,7 +74,7 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER TG_Not_enough_Seats
   BEFORE INSERT OR UPDATE ON Reserve
   FOR EACH ROW
-  EXECUTE PROCEDURE TF_Not_enough_Seats();
+  EXECUTE PROCEDURE TF_Not_enough_Seats();*/
 
 ------
 
