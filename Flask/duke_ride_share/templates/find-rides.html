@@ -8,18 +8,27 @@
             <!-- empty left sidebar -->
         </div>
         {% with messages = get_flashed_messages() %}
-        {% if messages %}
-        <ul class=flashes>
-        {% for message in messages %}
-        <h3><b><font color="red"> {{ message }}</font></b></h3>
-        {% endfor %}
-        </ul>
-        {% endif %}
+            {% if messages %}
+                <ul class=flashes>
+                {% for message in messages %}
+                    <h3><b><p style="color:red"> {{ message }}</p></b></h3>
+                {% endfor %}
+                </ul>
+            {% endif %}
         {% endwith %}
+
+        {% for message in searchForm.destination.errors %}
+            <p style="color:red; font-size:20px"><b>{{ message }}</b></p>
+        {% endfor %}
+
+        {% for message in searchForm.date.errors %}
+            <p style="color:red; font-size:20px"><b>{{ message }}</b></p>
+        {% endfor %}
 
         <div class="col-sm-8 text-left"> 
             <h1>Search for New Rides</h1>
-            <p>Rides posted or reserved by you will not appear here. For these rides visit your <a href="{{url_for('rides.account_main')}}"> account page </a></p>
+            <p style="font-size:16px">Rides posted or reserved by you will not appear here. For these rides visit your <a href="{{url_for('rides.account_main')}}">account page</a>.
+                You may search for rides on or before today's date.</p>
             <hr>
             <form method="post" action = "/rides/find-rides" onsubmit="return validateForm();">
                 {{ searchForm.csrf_token }}
@@ -66,7 +75,7 @@
                         <td style="border: 1px solid black; padding: 3px"> {{ item.seats_available }} </td>
                         <td style="border: 1px solid black; padding: 3px"> {{ item.comments }} </td>
                         <!--<td><a href="{{url_for('rides.reserveRide_main', rideNo=item.ride_no, spotsNeeded=spotsNeeded)}}"> Reserve Ride </a></td>-->
-                        <td><a href="{{url_for('rides.reserveRide_main')}}"> Reserve Ride </a></td>
+                        <td><form method="get"><button type="submit" formaction="{{url_for('rides.reserveRide_main')}}"> Reserve Ride </button></form></td>
                         <!--<td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-rideno="{{item.ride_no}}" data-dest="{{item.destination}}"> Book </button></td>-->
                         </tr>
                     {% endfor %}

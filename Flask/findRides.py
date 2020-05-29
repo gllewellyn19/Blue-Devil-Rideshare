@@ -12,8 +12,8 @@ def find_rides():
     reserveForm = forms.ReserveRideFormFactory()
     spotsNeeded=0 #will always change once form is submitted
 
-    #search prepared statements 
     if searchForm.validate_on_submit():
+        #prepared statements to search for rides with destination specific or just search all
         db.session.execute('''PREPARE SearchAll (varchar, date, integer, varchar) AS SELECT * FROM Ride r WHERE r.origin = $1\
             AND r.date = $2 and r.seats_available >= $3 and r.driver_netid!=$4\
             AND NOT EXISTS (SELECT * FROM Reserve rev WHERE rev.ride_no=r.ride_no AND rev.rider_netid=$4);''') 
@@ -25,18 +25,6 @@ def find_rides():
         date = request.form['date']
         spots_needed = request.form['spots_needed']
         spotsNeeded=spots_needed
-
-        #change later to validators
-        if origin_city == destination:
-            flash("Origin and destination cannot be the same.")
-            db.session.execute('DEALLOCATE SearchALL')
-            db.session.execute('DEALLOCATE Search')
-            return None,None,None,None
-        if date < str(datetime.date.today()):
-            flash("Date entered must be after today's date.")
-            db.session.execute('DEALLOCATE SearchALL')
-            db.session.execute('DEALLOCATE Search')
-            return None,None,None,None
 
         if destination == "Search All":
             results.extend(db.session.execute('EXECUTE SearchAll(:origin_city, :date, :spots_needed, :driver_netid)',\

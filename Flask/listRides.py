@@ -19,7 +19,7 @@ def list_rides(form):
         myRides.extend(db.session.execute('EXECUTE myRides(:driver_netid, :date)', {"driver_netid":driver_netid, "date":date}))
         db.session.execute('DEALLOCATE myRides')
         if myRides != []:
-            flash("You are already driving a ride on this day")
+            flash("You are already driving a ride on this day and can't list another ride.")
             return redirect(url_for('rides.list_rides_main'))
 
         myRevs=[]
@@ -28,7 +28,7 @@ def list_rides(form):
         myRevs.extend(db.session.execute('EXECUTE myRevs(:driver_netid, :date)', {"driver_netid":driver_netid, "date":date}))
         db.session.execute('DEALLOCATE myRevs')
         if myRevs != []:
-            flash("You have already reserved a ride on this day")
+            flash("You have already reserved a ride on this day and can't list a ride.")
             return redirect(url_for('rides.list_rides_main'))
 
         earliest_departure = request.form['earliest_departure']
@@ -40,7 +40,7 @@ def list_rides(form):
         comments = request.form['comments']
         if comments=='':
             comments = None
-        session['driver'] = True # NEED THIS?
+        session['driver'] = True 
         db.session.execute('''PREPARE List (varchar, varchar, varchar, date, time, time, integer, float, varchar)\
         AS INSERT INTO Ride VALUES (DEFAULT, $1, $2, $3, $4, $5, $6, $7, $8, $9);''')
         newride = db.session.execute('EXECUTE List(:origin_city, :destination, :driver_netid, :date, :earliest_departure, :latest_departure, :seats_available,\

@@ -8,13 +8,13 @@
             <!-- empty left sidebar -->
         </div>
         {% with messages = get_flashed_messages() %}
-        {% if messages %}
-        <ul class=flashes>
-        {% for message in messages %}
-        <h3><b><font color="red"> {{ message }}</font></b></h3>
-        {% endfor %}
-        </ul>
-        {% endif %}
+            {% if messages %}
+                <ul class=flashes>
+                {% for message in messages %}
+                    <h3><b><font color="red"> {{ message }}</font></b></h3>
+                {% endfor %}
+                </ul>
+            {% endif %}
         {% endwith %}
 
         <div class="col-sm-8 text-left"> 
@@ -22,16 +22,16 @@
             <hr>
             <h3>Reserving ride from <b>{{ride.origin }}</b> to <b>{{ride.destination }}</b> on <b>{{ride.date }}</b> </h3>
             <form id="reserveForm" method="post" action = "/rides/reserve-rides" onsubmit="return validateForm();">
-                    {{ reserveForm.csrf_token }}
-                    {{ reserveForm.notes.label }}
-                    <br>
-                    {{ reserveForm.notes }}
-                    <br>
-                    <br>
-                    {{ reserveForm.submit }}
-                    <br>
-                    <br>
-                </form>
+                {{ reserveForm.csrf_token }}
+                {{ reserveForm.notes.label }}
+                <br>
+                {{ reserveForm.notes }}
+                <br>
+                <br>
+                {{ reserveForm.submit }}
+                <br>
+                <br>
+            </form>
         </div>
         <div class="col-sm-2 sidenav">
             <!-- empty right sidebar-->
