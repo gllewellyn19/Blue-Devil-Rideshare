@@ -207,7 +207,7 @@ def editReservation():
         reservation = reservationToEdit
         if (reservation == None):
             flash("Reservation not found.")
-            return redirect(url_for('rides.account'))
+            return redirect(url_for('rides.account_main'))
         else: 
             validRideNo = True
 
@@ -229,7 +229,7 @@ def editReservation():
             newSpots = updatedSpots - reservationToEdit.seats_needed
             if (updatedSpots > ride.seats_available):
                 flash("Not enough room in the ride for spots needed. Reservation not updated.")
-                return redirect(url_for('rides.account'))
+                return redirect(url_for('rides.account_main'))
             reservation_edit = db.session.query(models.Reserve).filter(models.Reserve.ride_no == rideNumber).filter(models.Reserve.rider_netid == session['netid']).first()
             reservation_edit.seats_needed = updatedSpots
             db.session.commit()
@@ -240,7 +240,7 @@ def editReservation():
         db.session.commit()
         
         
-        return redirect(url_for('rides.account'))
+        return redirect(url_for('rides.account_main'))
         #except BaseException as e:
             #form.errors['database'] = str(e) #could be wrong
 
@@ -250,8 +250,8 @@ def editReservation():
 
 @bp.route('/riders-netids', methods=('GET', 'POST'))
 def Riders_Netids():
-    form = forms.RideNetIdNumberFactory()
-    returnS =ridersContact.ridersContact(form)
+    form = forms.RideNumberFactory()
+    returnS = ridersContact.ridersContact(form)
     print("in main")
     return returnS
 
@@ -277,13 +277,13 @@ def editRideTimeRideNoCheck():
         
         if (ride == None):
             flash("Ride not found.")
-            return redirect(url_for('rides.account'))
+            return redirect(url_for('rides.account_main'))
         reservations = db.session.query(models.Reserve).filter(models.Reserve.ride_no == rideNumber)
         if reservations.first() == None:
             reservations = None
         if not (reservations == None): #check if people already reserved this
             flash("You cannot change the time of ride people have already reserved. Please coordinate with them directly. You can find their netids via the form on the right.")
-            return redirect(url_for('rides.account')) 
+            return redirect(url_for('rides.account_main')) 
         else:
             validRideNo = True
     print("leaving valid ride number project")

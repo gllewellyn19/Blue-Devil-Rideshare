@@ -52,4 +52,4 @@ def reserve_rides(rideNo, spotsNeeded):
             It is recommended you reach out to your driver for more information about pick up.")
         return redirect(url_for('rides.find_rides_main'))
 
-    return render_template('reserve-rides.html', searchForm=searchForm, reserveForm=reserveForm, ride=edit_ride)
+    return render_template('reserve-rides.html', searchForm=searchForm, reserveForm=reserveForm, ride=edit_ride, spotsNeeded=spotsNeeded)

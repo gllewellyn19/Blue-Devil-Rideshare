@@ -61,6 +61,7 @@
                         <th style="width: 20; border: 1px solid black; text-align: center"> Earliest Departure </th>
                         <th style="width: 20%; border: 1px solid black; text-align: center"> Latest Departure </th>
                         <th style="width: 8%; border: 1px solid black; text-align: center"> Spots </th>
+                        <th style="width: 8%; border: 1px solid black; text-align: center"> Gas Price </th>
                         <th style="width: 10%; border: 1px solid black; text-align: center"> Comments </th>
                         <th style="width: 10%; border: 1px solid black; text-align: center"> Book </th>
                     </tr>
@@ -73,6 +74,7 @@
                         <td style="border: 1px solid black; padding: 3px"> {{ item.earliest_time }} </td>
                         <td style="border: 1px solid black; padding: 3px"> {{ item.latest_time }} </td>
                         <td style="border: 1px solid black; padding: 3px"> {{ item.seats_available }} </td>
+                        <td style="border: 1px solid black; padding: 3px"> {{ item.gas_price }} </td>
                         <td style="border: 1px solid black; padding: 3px"> {{ item.comments }} </td>
                         <!--<td><a href="{{url_for('rides.reserveRide_main', rideNo=item.ride_no, spotsNeeded=spotsNeeded)}}"> Reserve Ride </a></td>-->
                         <td><form method="get"><button type="submit" formaction="{{url_for('rides.reserveRide_main')}}"> Reserve Ride </button></form></td>

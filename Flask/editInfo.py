@@ -9,9 +9,10 @@ import forms
 def editInfo(editForm):
     user = db.session.query(models.Rideshare_user).filter(models.Rideshare_user.netid == session['netid']).first()
     driver = db.session.query(models.Driver).filter(models.Driver.netid == session['netid']).first()
-    returnStatement = render_template('edit-info.html', user=user, form=editForm, driver=driver)
+    returnStatement = render_template('edit-info.html', user=user, editForm=editForm, driver=driver)
 
     if editForm.validate_on_submit():
+        print("Edit form validated")
         newphone_number=request.form['phone_number']
         newaffiliation = request.form['affiliation']
         currentpassword = request.form['currentPassword']
@@ -82,6 +83,8 @@ def editInfo(editForm):
         flash("User information updated.")
         returnStatement = redirect(url_for('rides.account_main'))
         return returnStatement
+    else:
+        print("didnt validate")
 
     
     return returnStatement

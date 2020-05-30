@@ -20,57 +20,58 @@
                 {% endif %}
             {% endwith %}
 
-            {% for message in form.password.errors %}
+            {% for message in editForm.password.errors %}
                 <div>{{ message }}</div>
             {% endfor %}
    
-            {% for message in form.confirmPassword.errors %}
-                <div>{{ message }}</div>
+            {% for message in editForm.confirmPassword.errors %}
+                <p>in here</p>
+                <p>{{ message }}</p>
             {% endfor %}
 
-            {% for message in form.license_plate_no.errors %}
+            {% for message in editForm.license_plate_no.errors %}
                 <div>{{ message }}</div>
             {% endfor %}
 
             <form action = "/rides/edit-info"  onsubmit="return validateForm();" method="post">
                 <div style = font-size:14px; font-weight:bold; margin-left:150px;>
-                {{ form.csrf_token }}
+                {{ editForm.csrf_token }}
 
                 {% if driver %}
-                {{ form.license_plate_no.label }}<br>
-                {{ form.license_plate_no(value=driver.license_plate_no)}}
+                {{ editForm.license_plate_no.label }}<br>
+                {{ editForm.license_plate_no(value=driver.license_plate_no)}}
                 <br>
 
-                {{ form.plate_state.label }}<br>
-                {{ form.plate_state }}
+                {{ editForm.plate_state.label }}<br>
+                {{ editForm.plate_state }}
                 <br>
                 {% endif %}
                 
-                {{ form.affiliation.label }}<br>
-                {{ form.affiliation }}
+                {{ editForm.affiliation.label }}<br>
+                {{ editForm.affiliation }}
                 <br>
 
-                {{ form.phone_number.label }}<br>
-                {{ form.phone_number(value=user.phone_number)}}
+                {{ editForm.phone_number.label }}<br>
+                {{ editForm.phone_number(value=user.phone_number)}}
                 <br>
 
-                {{ form.currentPassword.label }}<br>
-                {{ form.currentPassword}}
+                {{ editForm.currentPassword.label }}<br>
+                {{ editForm.currentPassword}}
                 <br>
 
                 
-                {{ form.password.label }}<br>
-                {{ form.password }}
+                {{ editForm.password.label }}<br>
+                {{ editForm.password }}
                 <br>
 
-                {{ form.confirmPassword.label }}<br>
-                {{ form.confirmPassword }}
+                {{ editForm.confirmPassword.label }}<br>
+                {{ editForm.confirmPassword }}
                 <br>
 
                 <br>
                 </div>
                 <div style = font-size:20px; font-weight:bold; margin-left:150px;>
-                {{ form.submit }}
+                {{ editForm.submit }}
                 </div>
                 </form>
             </center>

@@ -10,33 +10,35 @@
             <center>
             <h1>List a Ride</h1>
             {% with messages = get_flashed_messages() %}
-            {% if messages %}
-            <ul class=flashes>
-            {% for message in messages %}
-            <h3><b> {{ message }}</b></h3>
-            {% endfor %}
-            </ul>
-            {% endif %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <h3><b><p style="color:red"> {{ message }}</p></b></h3>
+                    {% endfor %}
+                {% endif %}
             {% endwith %}
 
             {% for message in form.gas_price.errors %}
-            <div><b>{{ message }}</b></div>
+                <div><b><p style="color:red">{{ message }}</p></b></div>
             {% endfor %}
 
             {% for message in form.destination.errors %}
-            <div><b>{{ message }}</b></div>
+                <div><b><p style="color:red">{{ message }}</p></b></div>
             {% endfor %}
 
             {% for message in form.date.errors %}
-            <div><b>{{ message }}</b></div>
+                <div><b><p style="color:red">{{ message }}</p></b></div>
             {% endfor %}
 
             {% for message in form.earliest_departure.errors %}
-            <div><b>{{ message }}</b></div>
+                <div><b><p style="color:red">{{ message }}</p></b></div>
             {% endfor %}
 
             {% for message in form.latest_departure.errors %}
-            <div><b>{{ message }}</b></div>
+                <div><b><p style="color:red">{{ message }}</p></b></div>    
+            {% endfor %}
+
+            {% for message in form.seats_available.errors %}
+                <div><b><p style="color:red">{{ message }}</p></b></div>    
             {% endfor %}
 
             <form action = "/rides/list-rides"  onsubmit="return validateForm();" method="post">
