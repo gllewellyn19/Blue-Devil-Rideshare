@@ -20,7 +20,7 @@
         <div class="col-sm-8 text-left"> 
             <h1>Reserve Ride</h1>
             <hr>
-            <h3>Reserving ride from <b>{{ride.origin }}</b> to <b>{{ride.destination }}</b> on <b>{{ ride.date }}</b> for <b>{{spotsNeeded}}</b> spot(s). </h3>
+            <h3>Reserving ride from <b>{{ride.origin }}</b> to <b>{{ride.destination }}</b> on <b>{{ ride.date }}</b> for <b>{{spots_needed}}</b> spot(s). </h3>
             <form id="reserveForm" method="post" action = "/rides/reserve-rides" onsubmit="return validateForm();">
                 {{ reserveForm.csrf_token }}
                 {{ reserveForm.notes.label }}

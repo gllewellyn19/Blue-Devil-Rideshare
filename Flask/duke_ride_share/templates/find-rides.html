@@ -77,7 +77,8 @@
                         <td style="border: 1px solid black; padding: 3px"> {{ item.gas_price }} </td>
                         <td style="border: 1px solid black; padding: 3px"> {{ item.comments }} </td>
                         <!--<td><a href="{{url_for('rides.reserveRide_main', rideNo=item.ride_no, spotsNeeded=spotsNeeded)}}"> Reserve Ride </a></td>-->
-                        <td><form method="get"><button type="submit" formaction="{{url_for('rides.reserveRide_main')}}"> Reserve Ride </button></form></td>
+                        <td><form method="get"><button type="submit" formaction="{{url_for('rides.reserve_ride_main', 
+                            rideNo=item.ride_no, spots_needed=spots_needed)}}"> Reserve Ride </button></form></td>
                         <!--<td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-rideno="{{item.ride_no}}" data-dest="{{item.destination}}"> Book </button></td>-->
                         </tr>
                     {% endfor %}
@@ -85,7 +86,8 @@
             </div>
         </div>
 
-       
+        
+
         {% endif %}
         <div class="col-sm-8 text-left"> 
             {% if results == [] %}

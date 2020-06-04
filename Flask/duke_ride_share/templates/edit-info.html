@@ -3,78 +3,89 @@
 {% block content %}
 <div class="container-fluid text-center">    
     <div class="row content">
-        <div class="col-sm-2 sidenav">
-            <!-- empty left sidebar -->
-        </div>
         <div class="col-sm-8 text-left"> 
+
             <center>
-            <h1>Edit Information</h1>
-
-            {% with messages = get_flashed_messages() %}
-                {% if messages %}
-                    <ul class=flashes>
-                    {% for message in messages %}
-                        <h4><b> {{ message }}</b></h4>
-                    {% endfor %}
-                    </ul>
-                {% endif %}
-            {% endwith %}
-
-            {% for message in editForm.password.errors %}
-                <div>{{ message }}</div>
-            {% endfor %}
-   
-            {% for message in editForm.confirmPassword.errors %}
-                <p>in here</p>
-                <p>{{ message }}</p>
-            {% endfor %}
-
-            {% for message in editForm.license_plate_no.errors %}
-                <div>{{ message }}</div>
-            {% endfor %}
-
-            <form action = "/rides/edit-info"  onsubmit="return validateForm();" method="post">
-                <div style = font-size:14px; font-weight:bold; margin-left:150px;>
-                {{ editForm.csrf_token }}
-
-                {% if driver %}
-                {{ editForm.license_plate_no.label }}<br>
-                {{ editForm.license_plate_no(value=driver.license_plate_no)}}
-                <br>
-
-                {{ editForm.plate_state.label }}<br>
-                {{ editForm.plate_state }}
-                <br>
-                {% endif %}
+                <h1>Edit Information</h1>
+    
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        <ul class=flashes>
+                        {% for message in messages %}
+                            <h4><b> {{ message }}</b></h4>
+                        {% endfor %}
+                        </ul>
+                    {% endif %}
+                {% endwith %}
+    
+                {% for message in editForm.phone_number.errors %}
+                    <div>{{ message }}</div>
+                {% endfor %}
                 
-                {{ editForm.affiliation.label }}<br>
-                {{ editForm.affiliation }}
-                <br>
+                {% for message in editForm.license_plate_no.errors %}
+                    <div>{{ message }}</div>
+                {% endfor %}
 
-                {{ editForm.phone_number.label }}<br>
-                {{ editForm.phone_number(value=user.phone_number)}}
-                <br>
-
-                {{ editForm.currentPassword.label }}<br>
-                {{ editForm.currentPassword}}
-                <br>
-
+                {% for message in editForm.currentPassword.errors %}
+                    <div>{{ message }}</div>
+                {% endfor %}
                 
-                {{ editForm.password.label }}<br>
-                {{ editForm.password }}
-                <br>
+                {% for message in editForm.password.errors %}
+                    <div>{{ message }}</div>
+                {% endfor %}
 
-                {{ editForm.confirmPassword.label }}<br>
-                {{ editForm.confirmPassword }}
-                <br>
-
-                <br>
-                </div>
-                <div style = font-size:20px; font-weight:bold; margin-left:150px;>
-                {{ editForm.submit }}
-                </div>
-                </form>
-            </center>
+                {% for message in editForm.confirmPassword.errors %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+    
+                
+    
+                <form action = "/rides/edit-info"  onsubmit="return validateForm();" method="post">
+                    <div style = font-size:14px; font-weight:bold; margin-left:150px;>
+                    {{ editForm.csrf_token }}
+    
+                    {% if driver %}
+                    {{ editForm.license_plate_no.label }}<br>
+                    {{ editForm.license_plate_no(value=driver.license_plate_no)}}
+                    <br>
+    
+                    {{ editForm.plate_state.label }}<br>
+                    {{ editForm.plate_state }}
+                    <br>
+                    {% endif %}
+                    
+                    {{ editForm.affiliation.label }}<br>
+                    {{ editForm.affiliation }}
+                    <br>
+    
+                    {{ editForm.phone_number.label }}<br>
+                    {{ editForm.phone_number(value=user.phone_number)}}
+                    <br>
+    
+                    {{ editForm.currentPassword.label }}<br>
+                    {{ editForm.currentPassword}}
+                    <br>
+    
+                    
+                    {{ editForm.password.label }}<br>
+                    {{ editForm.password }}
+                    <br>
+    
+                    {{ editForm.confirmPassword.label }}<br>
+                    {{ editForm.confirmPassword }}
+                    <br>
+    
+                    {{ editForm.deleteAccount.label }}<br>
+                    {{ editForm.deleteAccount }}
+                    <br>
+    
+                    <br>
+                    </div>
+                    <div style = font-size:20px; font-weight:bold; margin-left:150px;>
+                        {{ editForm.submit }}
+                    </div>
+                    </form>
+                </center>
         </div>
     </div>
 </div>

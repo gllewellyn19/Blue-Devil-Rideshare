@@ -12,18 +12,19 @@ from sqlalchemy.orm import sessionmaker
 import datetime
 import forms
 import models
-import findRides
-import reserveRides
+from mainRideFunctionHelpers import search_rides
+from mainRideFunctionHelpers import ride_reservations
 import listRides
 import signUp
 import registerDriver
 import logIn
-import account
+from accountPageHelpers import account
 import pastRides
 import pastReservations
 import editInfo
 import editRides
 import ridersContact
+#could do from reserve_rides import * and can call directly - look into
 
 #global variables
 rideToEdit = None
@@ -40,15 +41,11 @@ def home_page():
 #NOTE: SHOULDN'T NEED BOTH FORMS
 @bp.route('/find-rides', methods=('GET', 'POST'))
 def find_rides_main():
-    spotsNeeded,searchForm,reserveForm,results = findRides.find_rides()
-    return render_template('find-rides.html', searchForm=searchForm, reserveForm=reserveForm, results=results, spotsNeeded=spotsNeeded) 
+    return search_rides.find()
 
 @bp.route('/reserve-rides', methods=('GET', 'POST'))    
-def reserveRide_main():  
-#def reserveRide_main(rideNo, spotsNeeded):
-    rideNo=4185
-    spotsNeeded=1
-    return reserveRides.reserve_rides(rideNo, spotsNeeded)
+def reserve_ride_main():  
+    return ride_reservations.reserve(request.args.get('rideNo'), request.args.get('spots_needed'))
 
 
 @bp.route('/list-rides', methods=['GET','POST'])
@@ -93,6 +90,8 @@ def account_main():
 @bp.route('/edit-info', methods=('GET', 'POST'))
 def editInfo_main():
     editForm = forms.EditInfoFactory()
+    #if editForm.validate_on_submit():
+        #print("validateddddddddddddddddddddddddddddddddd")
     returnStatement = editInfo.editInfo(editForm)
     return returnStatement
     
@@ -304,9 +303,6 @@ def editRideTimeRide():
         rideNumber = rideToEditTime.ride_no
         newearliest_departure = request.form['earliest_departure']
         newlatest_departure = request.form['latest_departure']
-        #if newlatest_departure < newearliest_departure:
-           # flash("Must make latest time of depature after earliest time of departure. Changes not saved.")
-            #return redirect(url_for('rides.editRideTimeRide'))
         edit_ride = db.session.query(models.Ride).filter(models.Ride.ride_no == rideNumber).one()
         edit_ride.earliest_time = newearliest_departure
         edit_ride.latest_time = newlatest_departure
