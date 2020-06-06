@@ -9,8 +9,7 @@ import models
 def find():
     searchForm = forms.SearchFormFactory()
     results = []
-    reserveForm = forms.ReserveRideFormFactory() #TRY COMMENTING OUT
-    spots_needed=0 #will always change once form is submitted (default value)
+    spots_needed=0 
 
     if searchForm.validate_on_submit():
         origin_city = request.form['origin_city']
@@ -24,7 +23,7 @@ def find():
             results = search(origin_city, destination, date, spots_needed)
 
 
-    return render_template('find-rides.html', searchForm=searchForm, reserveForm=reserveForm, results=results, spots_needed=spots_needed) 
+    return render_template('basicRidePages/find-rides.html', searchForm=searchForm, results=results, spots_needed=spots_needed) 
 
 #use a prepared statement in order to find all the results with any destination that have enough spots for the request
 def searchAll(origin_city, date, spots_needed):

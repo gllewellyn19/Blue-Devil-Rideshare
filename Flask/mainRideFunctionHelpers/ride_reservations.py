@@ -7,31 +7,29 @@ import forms
 import models
 
 
-def reserve_rides(rideNo, spots_needed):
+def reserve(rideNo, spots_needed):
     reserveForm = forms.ReserveRideFormFactory()
-    searchForm = forms.SearchFormFactory()
-    edit_ride = db.session.query(models.Ride).filter(models.Ride.ride_no == rideNo).first()
+    ride = db.session.query(models.Ride).filter(models.Ride.ride_no == rideNo).first()
 
     if reserveForm.validate_on_submit():
         notes = request.form['notes']
-
-        #dont allow to book ride if requesting more spots than there is available (would be because someone else just reserved the ride- this should never really happen)
-        if spots_needed > edit_ride.seats_available:
+        
+        if spots_needed > ride.seats_available:
             flash("Not enough spots in this ride as the number of spots available changed since your request.")
             return redirect(url_for('rides.find_rides_main')) 
         
-        if check_rides_on_date(edit_ride.date):
+        if check_rides_on_date(ride.date):
             flash("You are already driving a ride on this day and can't reserve a ride.")
             return redirect(url_for('rides.find_rides_main'))
 
-        if check_revs_on_date(edit_ride.date):
+        if check_revs_on_date(ride.date):
             flash("You have already reserved a ride on this day and can't reserve another ride.")
             return redirect(url_for('rides.find_rides_main'))
 
-        book_ride(edit_ride, spots_needed, rideNo, notes)
+        book_ride(ride, spots_needed, rideNo, notes)
         return redirect(url_for('rides.find_rides_main'))
 
-    return render_template('reserve-rides.html', searchForm=searchForm, reserveForm=reserveForm, ride=edit_ride, spots_needed=spots_needed)
+    return render_template('basicRidePages/reserve-rides.html', reserveForm=reserveForm, ride=ride, spots_needed=spots_needed)
 
 #returns true if the user is already driving a ride on that date (can't book a reservations)
 def check_rides_on_date(date):
@@ -46,13 +44,14 @@ def check_revs_on_date(date):
         myRevsOnDate=[]
         db.session.execute('''PREPARE myRevs (varchar, date) AS SELECT * FROM Reserve rev WHERE rev.rider_netid = $1\
             AND EXISTS (SELECT * FROM Ride r WHERE r.ride_no=rev.ride_no and r.date=$2);''')
-        myRevsOnDate.extend(db.session.execute('EXECUTE myRevs(:driver_netid, :date)', {"driver_netid":session['netid'], "date":edit_ride.date}))
+        myRevsOnDate.extend(db.session.execute('EXECUTE myRevs(:driver_netid, :date)', {"driver_netid":session['netid'], "date":date}))
         db.session.execute('DEALLOCATE myRevs')
         return myRevsOnDate != []
 
-def book_ride(edit_ride, spots_needed, rideNo, notes):
+#updates the seats available in  the ride and creates the reservation
+def book_ride(ride, spots_needed, rideNo, notes):
         #update seats available in ride
-        edit_ride.seats_available = edit_ride.seats_available - spots_needed
+        ride.seats_available = ride.seats_available - spots_needed
         db.session.commit()
 
         #create entry in Reserve table
@@ -61,5 +60,7 @@ def book_ride(edit_ride, spots_needed, rideNo, notes):
         db.session.commit()
         flash("Successfully booked. You can find the driver's netid on your account page. \
             It is recommended you reach out to your driver for more information about exact pick up time/ location.")
+
+
 
 

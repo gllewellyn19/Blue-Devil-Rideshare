@@ -1,0 +1,43 @@
+{% extends 'accountPages/account.html' %}
+{% block content %}
+<div class="container-fluid text-center">    
+    <div class="row content">
+        <div class="col-sm-8 text-left"> 
+            <center>
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        <ul class=flashes>
+                        {% for message in messages %}
+                            <h4><b> {{ message }}</b></h4>
+                        {% endfor %}
+                        </ul>
+                    {% endif %}
+                {% endwith %}
+          
+            {% if typeRide=='rev' %}
+                <h1>Enter the ride number for the reservation you would like to edit:</h1>
+            {% endif %}
+
+            {% if typeRide=='ride' %}
+                <h1>Enter the ride number for the ride you would like to edit:</h1>
+            {% endif %}
+            
+            <form action = "{{url_for('rides.verify_ride_main', type=typeRide)}}"  onsubmit="return validateForm();" method="post">
+                <div style = font-size:14px; font-weight:bold; margin-left:150px;>
+                    {{ form.csrf_token }}
+             
+                    {{ form.ride_no.label }}<br>
+                     {{ form.ride_no }}
+                     <br>
+                     <br>
+                </div>
+                <div style = font-size:20px; font-weight:bold; margin-left:150px;>
+                    {{ form.submit }}
+                </div>
+            </form>
+        </center>
+          
+        </div>
+    </div>
+</div>
+{% endblock %}

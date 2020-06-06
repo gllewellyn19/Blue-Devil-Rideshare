@@ -25,7 +25,7 @@ class Ride(db.Model):
     destination = db.Column('destination', db.String(100))
     driver_netid = db.Column('driver_netid', db.String(7), db.ForeignKey('driver.netid'))
     date = db.Column('date', db.Date())
-    earliest_time = db.Column('earliest_time', db.Time())
+    earliest_time = db.Column('earliest_time', db.Time()) #save as departure and fix many other places
     latest_time = db.Column('latest_time', db.Time())
     seats_available = db.Column('seats_available', db.Integer())
     gas_price = db.Column('gas_price', db.Integer())

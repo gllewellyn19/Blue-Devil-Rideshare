@@ -1,0 +1,221 @@
+{% extends 'basicRidePages/home.html' %}
+{% block content %}
+<div class="container-fluid text-center">    
+    <div class="row content">
+        <div class="col-sm-2 sidenav">
+            <!-- empty left sidebar -->
+        </div>
+        <div class="col-sm-8 text-left"> 
+            <h1><b>Your Account </b></h1>
+            <hr>
+            <!--Shows flashed messages from the pages linked to account-->
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <h3><b><p style="color:red"> {{ message }}</p></b></h3>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <h3><b>Account Information</b></h3>
+            <ul style="list-style-type: none;">
+                <li>NetID: {{user.netid}}</li>
+                <li>Name: {{user.name}}</li>
+                <li>Email: {{user.duke_email}}</li>
+                <li>Phone number: {{user.phone_number}}</li>
+                <li>Affiliation: {{user.affiliation}}</li>
+                <li>School: {{user.school}}</li>
+            </ul>
+            
+            <!--Only print driver information if the user is a driver-->
+            {% if driver %}
+                <h3><b>Driver Information</b></h3>
+                <ul style="list-style-type: none;">
+                    <li>License Number: {{driver.license_no}}</li>
+                    <li>License Plate Number: {{driver.license_plate_no}}</li>
+                    <li>License Plate State: {{driver.plate_state}}</li>
+                </ul>
+            {% endif %}
+
+            <br>
+            
+            <!--If applicable, print today's ride separately-->
+            {% if rideToday != None %}
+                <h3><b> You are driving the following ride today: </b></h3>
+                <table style="width: 85%">
+                    <tr style="border: 1px solid black;">
+                        <th style="width: 10%; border: 1px solid black; text-align: center"> Ride Number </th>
+                        <th style="width: 15%; border: 1px solid black; text-align: center"> Origin </th>
+                        <th style="width: 15%; border: 1px solid black; text-align: center"> Destination </th>
+                        <th style="width: 20%; border: 1px solid black; text-align: center"> Date </th>
+                        <th style="width: 20%; border: 1px solid black; text-align: center"> Earliest Time </th>
+                        <th style="width: 20%; border: 1px solid black; text-align: center"> Latest Time </th>
+                        <th style="width: 4%; border: 1px solid black; text-align: center"> Seats Available </th>
+                        <th style="width: 4%; border: 1px solid black; text-align: center"> Gas Price </th>
+                        <th style="width: 10%; border: 1px solid black; text-align: center"> Comments </th>
+                    </tr>
+                    <tr>
+                        <td style="border: 1px solid black; padding: 3px"> {{ rideToday.ride_no }} </td>
+                        <td style="border: 1px solid black; padding: 3px"> {{ rideToday.origin }} </td>
+                        <td style="border: 1px solid black; padding: 3px"> {{ rideToday.destination }} </td>
+                        <td style="border: 1px solid black; padding: 3px"> {{ rideToday.date}} </td>
+                        <td style="border: 1px solid black; padding: 3px"> {{ rideToday.earliest_time }} </td>
+                        <td style="border: 1px solid black; padding: 3px"> {{ rideToday.latest_time }} </td>
+                        <td style="border: 1px solid black; padding: 3px"> {{ rideToday.seats_available }} </td>
+                        <td style="border: 1px solid black; padding: 3px"> {{ rideToday.gas_price }} </td>
+                        <td style="border: 1px solid black; padding: 3px"> {{ rideToday.comments }} </td>
+                    </tr>
+                </table>
+            {% endif %}
+
+            {% if rideToday == None %}
+                <h3><b> You aren't driving a ride today. </b></h3>
+            {% endif %}
+
+            <br>
+            <!--If applicable, print today's reservation separately-->
+            {% if revToday != None %}
+                <h3><b> You have the following reservation today: </b></h3>
+                <table style="width: 85%">
+                    <tr style="border: 1px solid black;">
+                        <th style="width: 10%; border: 1px solid black; text-align: center"> Ride Number </th>
+                        <th style="width: 10%; border: 1px solid black; text-align: center"> Driver Netid </th>
+                        <th style="width: 15%; border: 1px solid black; text-align: center"> Origin </th>
+                        <th style="width: 15%; border: 1px solid black; text-align: center"> Destination </th>
+                        <th style="width: 20%; border: 1px solid black; text-align: center"> Date </th>
+                        <th style="width: 25%; border: 1px solid black; text-align: center"> Earliest Time </th>
+                        <th style="width: 20%; border: 1px solid black; text-align: center"> Latest Time </th>
+                        <th style="width: 4%; border: 1px solid black; text-align: center"> Seats Available </th>
+                        <th style="width: 4%; border: 1px solid black; text-align: center"> Gas Price </th>
+                        <th style="width: 10%; border: 1px solid black; text-align: center"> Comments </th>
+                        <th style="width: 10%; border: 1px solid black; text-align: center"> Your note </th>
+                        <th style="width: 10%; border: 1px solid black; text-align: center"> Seats Needed </th>
+                    </tr>
+                    <tr>
+                        <td style="border: 1px solid black; padding: 3px"> {{ revToday.ride_no }} </td>
+                        <td style="border: 1px solid black; padding: 3px"> {{ revToday.driver_netid }} </td>
+                        <td style="border: 1px solid black; padding: 3px"> {{ revToday.origin }} </td>
+                        <td style="border: 1px solid black; padding: 3px"> {{ revToday.destination }} </td>
+                        <td style="border: 1px solid black; padding: 3px"> {{ revToday.date}} </td>
+                        <td style="border: 1px solid black; padding: 3px"> {{ revToday.earliest_time }} </td>
+                        <td style="border: 1px solid black; padding: 3px"> {{ revToday.latest_time }} </td>
+                        <td style="border: 1px solid black; padding: 3px"> {{ revToday.seats_available }} </td>
+                        <td style="border: 1px solid black; padding: 3px"> {{ revToday.gas_price }} </td>
+                        <td style="border: 1px solid black; padding: 3px"> {{ revToday.comments }} </td>
+                        <td style="border: 1px solid black; padding: 3px"> {{ revToday.note }} </td>
+                        <td style="border: 1px solid black; padding: 3px"> {{ revToday.seats_needed }} </td>
+                    </tr>
+                </table>
+            {% endif %}
+
+            {% if revToday == None %}
+                <h3><b> You don't have a ride reserved today. </b></h3>
+            {% endif %}
+
+            <br>
+            
+            <!--Print all future rides (except today's if appliable)-->
+            {% if ridesListed != [] %}
+                <h3><b> Upcoming Rides Posted by you: </b></h3>
+                <table style="width: 85%">
+                    <tr style="border: 1px solid black;">
+                        <th style="width: 10%; border: 1px solid black; text-align: center"> Ride Number </th>
+                        <th style="width: 15%; border: 1px solid black; text-align: center"> Origin </th>
+                        <th style="width: 15%; border: 1px solid black; text-align: center"> Destination </th>
+                        <th style="width: 20%; border: 1px solid black; text-align: center"> Date </th>
+                        <th style="width: 20%; border: 1px solid black; text-align: center"> Earliest Time </th>
+                        <th style="width: 20%; border: 1px solid black; text-align: center"> Latest Time </th>
+                        <th style="width: 4%; border: 1px solid black; text-align: center"> Seats Available </th>
+                        <th style="width: 4%; border: 1px solid black; text-align: center"> Gas Price </th>
+                        <th style="width: 10%; border: 1px solid black; text-align: center"> Comments </th>
+                    </tr>
+                    {% for ride in ridesListed %}
+                    <tr>
+                        <td style="border: 1px solid black; padding: 3px"> {{ ride.ride_no }} </td>
+                        <td style="border: 1px solid black; padding: 3px"> {{ ride.origin }} </td>
+                        <td style="border: 1px solid black; padding: 3px"> {{ ride.destination }} </td>
+                        <td style="border: 1px solid black; padding: 3px"> {{ ride.date}} </td>
+                        <td style="border: 1px solid black; padding: 3px"> {{ ride.earliest_time }} </td>
+                        <td style="border: 1px solid black; padding: 3px"> {{ ride.latest_time }} </td>
+                        <td style="border: 1px solid black; padding: 3px"> {{ ride.seats_available }} </td>
+                        <td style="border: 1px solid black; padding: 3px"> {{ ride.gas_price }} </td>
+                        <td style="border: 1px solid black; padding: 3px"> {{ ride.comments }} </td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            
+            {% endif %}
+            {% if ridesListed == [] %}
+                <div>
+                    <h3><b>No Future Rides Listed</b></h3>
+                </div>
+            {% endif %}
+            <br>
+
+            <!--Print all future reservations (except today's if appliable)-->
+            {% if reservations != [] %}
+                <h3><b> Upcoming Rides Reserved by you:</b></h3>
+                <table style="width: 85%">
+                    <tr style="border: 1px solid black;">
+                        <th style="width: 10%; border: 1px solid black; text-align: center"> Ride Number </th>
+                        <th style="width: 10%; border: 1px solid black; text-align: center"> Driver Netid </th>
+                        <th style="width: 15%; border: 1px solid black; text-align: center"> Origin </th>
+                        <th style="width: 15%; border: 1px solid black; text-align: center"> Destination </th>
+                        <th style="width: 20%; border: 1px solid black; text-align: center"> Date </th>
+                        <th style="width: 25%; border: 1px solid black; text-align: center"> Earliest Time </th>
+                        <th style="width: 20%; border: 1px solid black; text-align: center"> Latest Time </th>
+                        <th style="width: 4%; border: 1px solid black; text-align: center"> Seats Available </th>
+                        <th style="width: 4%; border: 1px solid black; text-align: center"> Gas Price </th>
+                        <th style="width: 10%; border: 1px solid black; text-align: center"> Comments </th>
+                        <th style="width: 10%; border: 1px solid black; text-align: center"> Your note </th>
+                        <th style="width: 10%; border: 1px solid black; text-align: center"> Seats Needed </th>
+                    </tr>
+                    {% for reservation in reservations %}
+                    <tr>
+                        <td style="border: 1px solid black; padding: 3px"> {{ reservation.ride_no }} </td>
+                        <td style="border: 1px solid black; padding: 3px"> {{ reservation.driver_netid }} </td>
+                        <td style="border: 1px solid black; padding: 3px"> {{ reservation.origin }} </td>
+                        <td style="border: 1px solid black; padding: 3px"> {{ reservation.destination }} </td>
+                        <td style="border: 1px solid black; padding: 3px"> {{ reservation.date}} </td>
+                        <td style="border: 1px solid black; padding: 3px"> {{ reservation.earliest_time }} </td>
+                        <td style="border: 1px solid black; padding: 3px"> {{ reservation.latest_time }} </td>
+                        <td style="border: 1px solid black; padding: 3px"> {{ reservation.seats_available }} </td>
+                        <td style="border: 1px solid black; padding: 3px"> {{ reservation.gas_price }} </td>
+                        <td style="border: 1px solid black; padding: 3px"> {{ reservation.comments }} </td>
+                        <td style="border: 1px solid black; padding: 3px"> {{ reservation.note }} </td>
+                        <td style="border: 1px solid black; padding: 3px"> {{ reservation.seats_needed }} </td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            
+            {% endif %}
+            {% if reservations == [] %}
+                <div>
+                    <h3><b>No Future Rides Reserved</b></h3>
+                </div>
+            {% endif %}
+        
+                <!--variables passed in: user, ridesListed, ridesReserved.-->
+                <!--<li>Rides you are riding in: </li> here we update the status of the ride- delayed, cancelled, 
+                    ontime and how many riders and meeting spot/ drop off spot, comments, and driver
+                <li>Rides you have listed: </li> Same as information above
+                <li>Ride history: </li>Just list driver, time, origin, destination
+                buttons we want to have- edit password, edit rides -->
+           
+            <br>
+            <br>           
+        </div>
+        <!--In the side column, give links to all the edit, etc. pages-->
+        <div class="col-sm-2 sidenav">
+            <br> <a href="{{url_for('rides.edit_info_main')}}">Edit Information</a>
+            <br> <a href="{{url_for('rides.verify_ride_main', type='ride')}}">Edit Ride</a>
+            <br> <a href="{{url_for('rides.verify_ride_main', type='rev')}}">Edit Reservation</a>
+            <br> <a href="{{url_for('rides.riders_netids')}}">Contact Info of Riders who Reserved your Ride</a>
+            {% if driver %}
+                <br> <a href="{{url_for('rides.past_rides_main')}}">Past Rides</a>
+            {% endif %}
+            <br> <a href="{{url_for('rides.past_reservations_main')}}">Past Reservations</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

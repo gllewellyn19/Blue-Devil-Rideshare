@@ -1,0 +1,44 @@
+{% extends 'accountPages/account.html' %}
+{% block content %}
+<div class="container-fluid text-center">    
+    <div class="row content">
+        <div class="col-sm-8 text-left"> 
+            <h1>Edit a Reservation</h1>
+            <hr>
+            {% with messages = get_flashed_messages() %}
+              {% if messages %}
+                <ul class=flashes>
+                {% for message in messages %}
+                    <h3><b><font color="red"> {{ message }}</font></b></h3>
+                {% endfor %}
+                </ul>
+              {% endif %}
+            {% endwith %}
+            <h3>Reserving ride from <b>{{ride.origin }}</b> to <b>{{ride.destination }}</b> on <b>{{ ride.date }}</b> </h3>
+            <center>
+              
+              <form action = "{{url_for('rides.edit_rev_main', rideNo=reservation.ride_no)}}"  onsubmit="return validateForm();" method="post">
+                <div style = font-size:14px; font-weight:bold; margin-left:150px;>
+                {{ form.csrf_token }}
+
+                {{ form.spots_needed.label }}<br>
+                {{ form.spots_needed(value=reservation.seats_needed)}}
+                <br>
+            
+
+                {{ form.cancel.label }}<br>
+                {{ form.cancel(value='Yes') }}
+                <br>
+                <br>
+
+              </div>
+              <div style = font-size:20px; font-weight:bold; margin-left:150px;>
+              {{ form.submit }}
+              </div>
+              </form>
+              
+            </center>
+        </div>
+    </div>
+</div>
+{% endblock %}

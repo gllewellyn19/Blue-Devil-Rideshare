@@ -1,0 +1,63 @@
+{% extends 'accountPages/account.html' %}
+{% block content %}
+<div class="container-fluid text-center">    
+    <div class="row content">
+        <div class="col-sm-8 text-left"> 
+
+            <center>
+            <h1>Edit a Ride</h1>
+            <hr>
+
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <ul class=flashes>
+                        {% for message in messages %}
+                            <p style="font-size:12"> {{ message }}</p>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            {% endwith %}
+
+            {% for message in form.gas_price.errors %}
+                <div>{{ message }}</div>
+            {% endfor %}
+        
+              <form action = "{{url_for('rides.edit_ride_main', rideNo=ride.ride_no)}}"  onsubmit="return validateForm();" method="post">
+                <div style = font-size:14px; font-weight:bold; margin-left:150px;>
+                    {{ form.csrf_token }}
+
+                    {{ form.date.label }}<br>
+                    {{ form.date }}
+                    <br>
+
+                    {{ form.earliest_departure.label }}<br>
+                    {{ form.earliest_departure }}
+                    <br>
+
+                    {{ form.latest_departure.label }}<br>
+                    {{ form.latest_departure }}
+                    <br>
+
+                    {{ form.gas_price.label }}<br>
+                    {{ form.gas_price(value=ride.gas_price) }}
+                    <br>
+
+                    {{ form.comments.label }}<br>
+                    {{ form.comments(value=ride.comments) }}
+                    <br>
+
+                    {{ form.cancel.label }}<br>
+                    {{ form.cancel(value='No') }}
+                    <br>
+                    <br>
+
+                </div>
+                <div style = font-size:20px; font-weight:bold; margin-left:150px;>
+                    {{ form.submit }}
+                </div>
+              </form>
+          </center>
+        </div>
+    </div>
+</div>
+{% endblock %}
