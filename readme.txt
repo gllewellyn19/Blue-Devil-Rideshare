@@ -1,3 +1,11 @@
+New notes readme:
+Download docker! Copy and paste instructions
+Pull from git
+docker-compose up (maybe docker-compose build too) in terminal
+Go to localhost:8080/rides/
+
+
+
 After having met with Danai Adkisson from the Technology Engagement Center, my group was able to set up a group VM by reserving one through Duke OIT.  The group VM runs continuously (does not turn off).
 
 The host name for the group VM is as follows: vcm-13365.vm.duke.edu

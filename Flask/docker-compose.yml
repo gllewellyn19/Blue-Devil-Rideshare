@@ -1,9 +1,26 @@
-version: "3.2"
+version: '3.7'
+
 services:
-    app:
-        build: .
-        command: ./start.sh
-        ports:
-            - 8080:8080
-        environment:
-            DBPASSWORD: ${DBPASSWORD}
+  web:
+    build: .
+    command: gunicorn --bind 0.0.0.0:8080 "duke_ride_share:create_app()"
+    ports:
+      - "8080:8080"
+  db:
+    image: postgres
+    restart: always
+    volumes: 
+      - dbdata:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: example
+      POSTGRES_USER: rideshare
+      POSTGRES_DB: production
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 3000:8080
+
+volumes:
+  dbdata: 

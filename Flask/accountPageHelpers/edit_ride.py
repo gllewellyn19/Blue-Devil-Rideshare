@@ -28,8 +28,8 @@ def edit():
 #sets the defaults for the ride form
 def set_defaults(rideNo, editRideForm):
     ride=db.session.query(models.Ride).filter(models.Ride.ride_no == rideNo).first()
-    editRideForm.earliest_departure.data=ride.earliest_time
-    editRideForm.latest_departure.data=ride.latest_time
+    editRideForm.earliest_departure.data=ride.earliest_departure
+    editRideForm.latest_departure.data=ride.latest_departure
     editRideForm.date.data=ride.date
     return ride
 
@@ -60,8 +60,8 @@ def update_ride(ride, form):
             
     ride.gas_price = newgas_price
     ride.comments = newcomments
-    ride.earliest_time = newearliest_departure
-    ride.latest_time = newlatest_departure
+    ride.earliest_departure = newearliest_departure
+    ride.latest_departure = newlatest_departure
     ride.date = newdate
     db.session.commit()
     flash("Ride updated.")

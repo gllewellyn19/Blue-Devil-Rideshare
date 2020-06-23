@@ -1,36 +1,36 @@
-CREATE TABLE rideshare_user
+CREATE TABLE Rideshare_user
 (netid VARCHAR(7) NOT NULL UNIQUE PRIMARY KEY,
- name VARCHAR(256) NOT NULL,
- duke_email VARCHAR(256) NOT NULL,
- phone_number BIGINT NOT NULL,
- affiliation VARCHAR(256) NOT NULL,
- school VARCHAR(256) NOT NULL,
- password VARCHAR(256) NOT NULL);
+ name VARCHAR(50) NOT NULL,
+ duke_email VARCHAR(40) NOT NULL,
+ phone_number VARCHAR(12) NOT NULL,
+ affiliation VARCHAR(20) NOT NULL,
+ password VARCHAR(100) NOT NULL);
 
 CREATE TABLE Driver
 (netid VARCHAR(7) NOT NULL PRIMARY KEY REFERENCES rideshare_user(netid),
  license_no VARCHAR(50) NOT NULL,
  license_plate_no VARCHAR(10) NOT NULL,
- plate_state VARCHAR(3) NOT NULL);
+ plate_state VARCHAR(4) NOT NULL);
 
 CREATE TABLE Ride
 (ride_no SERIAL NOT NULL UNIQUE PRIMARY KEY,
- origin VARCHAR(100) NOT NULL,
- destination VARCHAR(100) NOT NULL CHECK(destination <> origin), -- check this -- if this doesnt work make a trigger
+ origin VARCHAR(50) NOT NULL,
+ destination VARCHAR(50) NOT NULL CHECK(destination <> origin), 
  driver_netid VARCHAR(7) NOT NULL REFERENCES Driver(netid),
  date DATE NOT NULL, 
- earliest_time TIME CHECK(earliest_time <= latest_time),
- latest_time TIME CHECK (latest_time >= earliest_time),
- seats_available INTEGER NOT NULL, 
+ earliest_departure TIME CHECK(earliest_time <= latest_time),
+ latest_departure TIME CHECK (latest_time >= earliest_time),
+ seats_available INTEGER NOT NULL,
+ max_seats_available INTEGER NOT NULL, 
  gas_price INTEGER,
- comments VARCHAR(500));
+ comments VARCHAR(200));
 
 CREATE TABLE Reserve
 (--reservation_id SERIAL PRIMARY KEY,
   rider_netid VARCHAR(7) NOT NULL,
   ride_no INTEGER NOT NULL, 
   seats_needed INTEGER NOT NULL,
-  note VARCHAR(150), 
+  note VARCHAR(200), 
   PRIMARY KEY(rider_netid, ride_no),
   FOREIGN KEY (rider_netid) REFERENCES rideshare_user(netid),
   FOREIGN KEY (ride_no) REFERENCES Ride(ride_no));

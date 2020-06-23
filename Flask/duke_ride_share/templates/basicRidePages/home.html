@@ -22,13 +22,6 @@
         <a class="navbar-brand" href="#">Duke University Rideshare</a>
       </div>
       <div class="collapse navbar-collapse" id="myNavbar">
-        <!-- commented out the navbar that is left-aligned next to logo-->
-        <!-- <ul class="nav navbar-nav">
-          <li class="active"><a href="#">Home</a></li>
-          <li><a href="#">About</a></li>
-          <li><a href="#">Projects</a></li>
-          <li><a href="#">Contact</a></li>
-        </ul> -->
         <ul class="nav navbar-nav navbar-right">
           <li><a href="{{url_for('rides.home_page')}}"> Home </a></li>
           {% if session['logged_in'] %}
@@ -92,8 +85,9 @@
   </div>
   {% endblock %}
   <footer class="container-fluid text-center">
-    <p> <br>Created by: Meredith Brown, Adam Krekorian, Grace Llewellyn, Isabel Shiff, Calleigh Smith</br>
-      <br>Contact us: Office: (301) 366 9384 Fax: (301) 366 9385 Email: dukerideshare@gmail.com</br></p>
+    <p> <br>Created by: Meredith Brown, Adam Krekorian, Grace Llewellyn, Isabel Shiff, Calleigh Smith.
+      <br> Later adapted by: Grace Llewellyn and Calleigh Smith
+      <br>Contact us: Office: (301) 366 9384 Fax: (301) 366 9385 Email: dukerideshare@gmail.com</p>
   </footer>
 
 </body>

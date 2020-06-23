@@ -16,9 +16,10 @@
                         <th style="width: 15%; border: 1px solid black; text-align: center"> Origin </th>
                         <th style="width: 15%; border: 1px solid black; text-align: center"> Destination </th>
                         <th style="width: 20%; border: 1px solid black; text-align: center"> Date </th>
-                        <th style="width: 20%; border: 1px solid black; text-align: center"> Earliest Time </th>
-                        <th style="width: 20%; border: 1px solid black; text-align: center"> Latest Time </th>
+                        <th style="width: 20%; border: 1px solid black; text-align: center"> Earliest Departure </th>
+                        <th style="width: 20%; border: 1px solid black; text-align: center"> Latest Departure </th>
                         <th style="width: 4%; border: 1px solid black; text-align: center"> Seats Available </th>
+                        <th style="width: 4%; border: 1px solid black; text-align: center"> Max Seats Available </th>
                         <th style="width: 4%; border: 1px solid black; text-align: center"> Gas Price </th>
                         <th style="width: 10%; border: 1px solid black; text-align: center"> Comments </th>
                     </tr>
@@ -28,9 +29,10 @@
                         <td style="border: 1px solid black; padding: 3px"> {{ ride.origin }} </td>
                         <td style="border: 1px solid black; padding: 3px"> {{ ride.destination }} </td>
                         <td style="border: 1px solid black; padding: 3px"> {{ ride.date}} </td>
-                        <td style="border: 1px solid black; padding: 3px"> {{ ride.earliest_time }} </td>
-                        <td style="border: 1px solid black; padding: 3px"> {{ ride.latest_time }} </td>
+                        <td style="border: 1px solid black; padding: 3px"> {{ ride.earliest_departure }} </td>
+                        <td style="border: 1px solid black; padding: 3px"> {{ ride.latest_departure }} </td>
                         <td style="border: 1px solid black; padding: 3px"> {{ ride.seats_available }} </td>
+                        <td style="border: 1px solid black; padding: 3px"> {{ ride.max_seats_available }} </td>
                         <td style="border: 1px solid black; padding: 3px"> {{ ride.gas_price }} </td>
                         <td style="border: 1px solid black; padding: 3px"> {{ ride.comments }} </td>
                     </tr>

@@ -59,11 +59,13 @@ def check_revs_on_date(date):
 
 #creates the ride and inserts it into the database 
 def create_ride(destination,origin_city, date, earliest_departure, latest_departure, seats_available, gas_price, comments, driver_netid):
-    db.session.execute('''PREPARE listRide (varchar, varchar, varchar, date, time, time, integer, float, varchar)\
-        AS INSERT INTO Ride VALUES (DEFAULT, $1, $2, $3, $4, $5, $6, $7, $8, $9);''')
-    newride = db.session.execute('EXECUTE listRide(:origin_city, :destination, :driver_netid, :date, :earliest_departure, :latest_departure, :seats_available,\
-            :gas_price, :comments)', {"origin_city":origin_city, "destination":destination, "driver_netid":driver_netid, "date":date,\
-            "earliest_departure":earliest_departure, "latest_departure":latest_departure, "seats_available":seats_available, "gas_price":gas_price, "comments":comments})
+    db.session.execute('''PREPARE listRide (varchar, varchar, varchar, date, time, time, integer, integer, float, varchar)\
+        AS INSERT INTO Ride VALUES (DEFAULT, $1, $2, $3, $4, $5, $6, $7, $8, $9, $10);''')
+    newride = db.session.execute('EXECUTE listRide(:origin_city, :destination, :driver_netid, :date, :earliest_departure,\
+            :latest_departure, :seats_available, :max_seats_available, :gas_price, :comments)', \
+            {"origin_city":origin_city, "destination":destination, "driver_netid":driver_netid, "date":date,\
+            "earliest_departure":earliest_departure, "latest_departure":latest_departure, "seats_available":seats_available,\
+            "max_seats_available":seats_available, "gas_price":gas_price, "comments":comments})
     db.session.commit()
     db.session.execute('DEALLOCATE listRide')
     flash("Ride successfully listed.")

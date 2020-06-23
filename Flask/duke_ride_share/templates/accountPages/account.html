@@ -48,9 +48,10 @@
                         <th style="width: 15%; border: 1px solid black; text-align: center"> Origin </th>
                         <th style="width: 15%; border: 1px solid black; text-align: center"> Destination </th>
                         <th style="width: 20%; border: 1px solid black; text-align: center"> Date </th>
-                        <th style="width: 20%; border: 1px solid black; text-align: center"> Earliest Time </th>
-                        <th style="width: 20%; border: 1px solid black; text-align: center"> Latest Time </th>
+                        <th style="width: 20%; border: 1px solid black; text-align: center"> Earliest Departure </th>
+                        <th style="width: 20%; border: 1px solid black; text-align: center"> Latest Departure </th>
                         <th style="width: 4%; border: 1px solid black; text-align: center"> Seats Available </th>
+                        <th style="width: 4%; border: 1px solid black; text-align: center"> Max Seats Available </th>
                         <th style="width: 4%; border: 1px solid black; text-align: center"> Gas Price </th>
                         <th style="width: 10%; border: 1px solid black; text-align: center"> Comments </th>
                     </tr>
@@ -59,9 +60,10 @@
                         <td style="border: 1px solid black; padding: 3px"> {{ rideToday.origin }} </td>
                         <td style="border: 1px solid black; padding: 3px"> {{ rideToday.destination }} </td>
                         <td style="border: 1px solid black; padding: 3px"> {{ rideToday.date}} </td>
-                        <td style="border: 1px solid black; padding: 3px"> {{ rideToday.earliest_time }} </td>
-                        <td style="border: 1px solid black; padding: 3px"> {{ rideToday.latest_time }} </td>
+                        <td style="border: 1px solid black; padding: 3px"> {{ rideToday.earliest_departure }} </td>
+                        <td style="border: 1px solid black; padding: 3px"> {{ rideToday.latest_departure }} </td>
                         <td style="border: 1px solid black; padding: 3px"> {{ rideToday.seats_available }} </td>
+                        <td style="border: 1px solid black; padding: 3px"> {{ rideToday.max_seats_available }} </td>
                         <td style="border: 1px solid black; padding: 3px"> {{ rideToday.gas_price }} </td>
                         <td style="border: 1px solid black; padding: 3px"> {{ rideToday.comments }} </td>
                     </tr>
@@ -83,13 +85,14 @@
                         <th style="width: 15%; border: 1px solid black; text-align: center"> Origin </th>
                         <th style="width: 15%; border: 1px solid black; text-align: center"> Destination </th>
                         <th style="width: 20%; border: 1px solid black; text-align: center"> Date </th>
-                        <th style="width: 25%; border: 1px solid black; text-align: center"> Earliest Time </th>
-                        <th style="width: 20%; border: 1px solid black; text-align: center"> Latest Time </th>
+                        <th style="width: 25%; border: 1px solid black; text-align: center"> Earliest Departure </th>
+                        <th style="width: 20%; border: 1px solid black; text-align: center"> Latest Departure </th>
                         <th style="width: 4%; border: 1px solid black; text-align: center"> Seats Available </th>
+                        <th style="width: 4%; border: 1px solid black; text-align: center"> Max Seats Available </th>
                         <th style="width: 4%; border: 1px solid black; text-align: center"> Gas Price </th>
                         <th style="width: 10%; border: 1px solid black; text-align: center"> Comments </th>
                         <th style="width: 10%; border: 1px solid black; text-align: center"> Your note </th>
-                        <th style="width: 10%; border: 1px solid black; text-align: center"> Seats Needed </th>
+                        <th style="width: 10%; border: 1px solid black; text-align: center"> Your Seats Needed </th>
                     </tr>
                     <tr>
                         <td style="border: 1px solid black; padding: 3px"> {{ revToday.ride_no }} </td>
@@ -97,9 +100,10 @@
                         <td style="border: 1px solid black; padding: 3px"> {{ revToday.origin }} </td>
                         <td style="border: 1px solid black; padding: 3px"> {{ revToday.destination }} </td>
                         <td style="border: 1px solid black; padding: 3px"> {{ revToday.date}} </td>
-                        <td style="border: 1px solid black; padding: 3px"> {{ revToday.earliest_time }} </td>
-                        <td style="border: 1px solid black; padding: 3px"> {{ revToday.latest_time }} </td>
+                        <td style="border: 1px solid black; padding: 3px"> {{ revToday.earliest_departure }} </td>
+                        <td style="border: 1px solid black; padding: 3px"> {{ revToday.latest_departure }} </td>
                         <td style="border: 1px solid black; padding: 3px"> {{ revToday.seats_available }} </td>
+                        <td style="border: 1px solid black; padding: 3px"> {{ revToday.max_seats_available }} </td>
                         <td style="border: 1px solid black; padding: 3px"> {{ revToday.gas_price }} </td>
                         <td style="border: 1px solid black; padding: 3px"> {{ revToday.comments }} </td>
                         <td style="border: 1px solid black; padding: 3px"> {{ revToday.note }} </td>
@@ -123,9 +127,10 @@
                         <th style="width: 15%; border: 1px solid black; text-align: center"> Origin </th>
                         <th style="width: 15%; border: 1px solid black; text-align: center"> Destination </th>
                         <th style="width: 20%; border: 1px solid black; text-align: center"> Date </th>
-                        <th style="width: 20%; border: 1px solid black; text-align: center"> Earliest Time </th>
-                        <th style="width: 20%; border: 1px solid black; text-align: center"> Latest Time </th>
+                        <th style="width: 20%; border: 1px solid black; text-align: center"> Earliest Departure </th>
+                        <th style="width: 20%; border: 1px solid black; text-align: center"> Latest Departure </th>
                         <th style="width: 4%; border: 1px solid black; text-align: center"> Seats Available </th>
+                        <th style="width: 4%; border: 1px solid black; text-align: center"> Max Seats Available </th>
                         <th style="width: 4%; border: 1px solid black; text-align: center"> Gas Price </th>
                         <th style="width: 10%; border: 1px solid black; text-align: center"> Comments </th>
                     </tr>
@@ -135,9 +140,10 @@
                         <td style="border: 1px solid black; padding: 3px"> {{ ride.origin }} </td>
                         <td style="border: 1px solid black; padding: 3px"> {{ ride.destination }} </td>
                         <td style="border: 1px solid black; padding: 3px"> {{ ride.date}} </td>
-                        <td style="border: 1px solid black; padding: 3px"> {{ ride.earliest_time }} </td>
-                        <td style="border: 1px solid black; padding: 3px"> {{ ride.latest_time }} </td>
+                        <td style="border: 1px solid black; padding: 3px"> {{ ride.earliest_departure }} </td>
+                        <td style="border: 1px solid black; padding: 3px"> {{ ride.latest_departure }} </td>
                         <td style="border: 1px solid black; padding: 3px"> {{ ride.seats_available }} </td>
+                        <td style="border: 1px solid black; padding: 3px"> {{ ride.max_seats_available }} </td>
                         <td style="border: 1px solid black; padding: 3px"> {{ ride.gas_price }} </td>
                         <td style="border: 1px solid black; padding: 3px"> {{ ride.comments }} </td>
                     </tr>
@@ -162,9 +168,10 @@
                         <th style="width: 15%; border: 1px solid black; text-align: center"> Origin </th>
                         <th style="width: 15%; border: 1px solid black; text-align: center"> Destination </th>
                         <th style="width: 20%; border: 1px solid black; text-align: center"> Date </th>
-                        <th style="width: 25%; border: 1px solid black; text-align: center"> Earliest Time </th>
-                        <th style="width: 20%; border: 1px solid black; text-align: center"> Latest Time </th>
+                        <th style="width: 25%; border: 1px solid black; text-align: center"> Earliest Departure </th>
+                        <th style="width: 20%; border: 1px solid black; text-align: center"> Latest Departure </th>
                         <th style="width: 4%; border: 1px solid black; text-align: center"> Seats Available </th>
+                        <th style="width: 4%; border: 1px solid black; text-align: center"> Max Seats Available </th>
                         <th style="width: 4%; border: 1px solid black; text-align: center"> Gas Price </th>
                         <th style="width: 10%; border: 1px solid black; text-align: center"> Comments </th>
                         <th style="width: 10%; border: 1px solid black; text-align: center"> Your note </th>
@@ -177,9 +184,10 @@
                         <td style="border: 1px solid black; padding: 3px"> {{ reservation.origin }} </td>
                         <td style="border: 1px solid black; padding: 3px"> {{ reservation.destination }} </td>
                         <td style="border: 1px solid black; padding: 3px"> {{ reservation.date}} </td>
-                        <td style="border: 1px solid black; padding: 3px"> {{ reservation.earliest_time }} </td>
-                        <td style="border: 1px solid black; padding: 3px"> {{ reservation.latest_time }} </td>
+                        <td style="border: 1px solid black; padding: 3px"> {{ reservation.earliest_departure }} </td>
+                        <td style="border: 1px solid black; padding: 3px"> {{ reservation.latest_departure }} </td>
                         <td style="border: 1px solid black; padding: 3px"> {{ reservation.seats_available }} </td>
+                        <td style="border: 1px solid black; padding: 3px"> {{ reservation.max_seats_available }} </td>
                         <td style="border: 1px solid black; padding: 3px"> {{ reservation.gas_price }} </td>
                         <td style="border: 1px solid black; padding: 3px"> {{ reservation.comments }} </td>
                         <td style="border: 1px solid black; padding: 3px"> {{ reservation.note }} </td>

@@ -54,9 +54,10 @@ def update_reservation(reservation, updatedSpots):
 
 #checks to see if enough spots in the ride for the new reservation
 def valid_new_rev(reservation, ride, updatedSpots):
-    if (updatedSpots > ride.seats_available):
+    if updatedSpots > ride.seats_available:
         flash("Not enough room in the ride for spots needed. Reservation not updated.")
         return False
-    return True
+    else:
+        return True
 
     

@@ -6,15 +6,16 @@ from flask import Flask, request, session, flash, redirect, url_for, render_temp
 import models
 import forms
 
+#controls the creation of the account
 def create_account():
     signUpForm = forms.RegisterFormFactory()
 
     if signUpForm.validate_on_submit():
-        netid,name,duke_email,phone_number,password,affiliation,school=extract_info(signUpForm)
+        netid,name,duke_email,phone_number,password,affiliation=extract_info(signUpForm)
         if check_existing_user(netid):
             return redirect(url_for('rides.log_in_main'))
 
-        register_user(netid,name,duke_email,phone_number,password,affiliation,school)
+        register_user(netid,name,duke_email,phone_number,password,affiliation)
         return redirect(url_for('rides.log_in_main'))
         
     return render_template('registerLogInPages/sign-up.html', form=signUpForm)
@@ -27,9 +28,7 @@ def extract_info(form):
     phone_number = request.form['phone_number']
     password = request.form['password']
     affiliation = request.form['affiliation_sel']
-    school = request.form['school']
-    #NOTE: change to phone number to varchar when I change later and remove school
-    return netid,name,duke_email,phone_number,password,affiliation,school
+    return netid,name,duke_email,phone_number,password,affiliation
 
 #returns true if the given netid already goes with an existing account
 def check_existing_user(netid):
@@ -39,16 +38,18 @@ def check_existing_user(netid):
         return True
     return False
 
-#inserts the user into the data base
-def register_user(netid,name,duke_email,phone_number,password,affiliation,school):
+#inserts the user into the database
+def register_user(netid,name,duke_email,phone_number,password,affiliation):
     #NOTE try to do this with prepare statement but not working
-    """db.session.execute('''PREPARE signUp (varchar, varchar, varchar, integer, varchar, varchar, varchar)\
-        AS INSERT INTO Rideshare_user VALUES ($1, $2, $3, $4, $5, $6, $7);''')
-    newUser = db.session.execute('EXECUTE signUp(:netid, :name, :duke_email, :phone_number, :password, :affiliation, :school)',\
-            {"netid":session['netid'], "name":name, "duke_email":duke_email, "phone_number":phone_number, "password":password, "affiliation":affiliation, "school":school})
+    """db.session.execute('''PREPARE signUp (varchar, varchar, varchar, integer, varchar, varchar)\
+        AS INSERT INTO Rideshare_user VALUES ($1, $2, $3, $4, $5, $6);''')
+    newUser = db.session.execute('EXECUTE signUp(:netid, :name, :duke_email, :phone_number, :password, :affiliation)',\
+            {"netid":session['netid'], "name":name, "duke_email":duke_email, "phone_number":phone_number, "password":password,\
+            "affiliation":affiliation})
     db.session.commit()
     db.session.execute('DEALLOCATE signUp')"""
-    newUser = models.Rideshare_user(netid=netid, name=name, duke_email=duke_email, phone_number=phone_number, password=password, affiliation=affiliation, school=school)
+    newUser = models.Rideshare_user(netid=netid, name=name, duke_email=duke_email, phone_number=phone_number, password=password,\
+        affiliation=affiliation)
     db.session.add(newUser)
     db.session.commit()
     flash("Account successfully created.")

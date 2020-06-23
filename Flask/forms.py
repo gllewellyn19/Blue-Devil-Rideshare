@@ -36,47 +36,44 @@ def ConfirmPassEqual():
             raise ValidationError(message)
     return _ConfirmPassEqual
 
-def ExistingNetid():
+def CheckIfExistingNetid():
     message = 'An account with this netID already exists. Please log in if this is your netID'
 
-    def _existingNetid(form, field):
+    def _CheckIfExistingNetid(form, field):
         existingUsers = db.session.query(models.Rideshare_user).filter(models.Rideshare_user.netid == field.data)
         if existingUsers.first() != None:
             raise ValidationError(message)
-    return _existingNetid
+    return _CheckIfExistingNetid
 
-def correctPassword():
+def CorrectPassword():
     message = 'The current password you entered does not match your password'
 
-    def _correctPassword(form, field):
+    def _CorrectPassword(form, field):
         user = db.session.query(models.Rideshare_user).filter(models.Rideshare_user.netid == session['netid']).first()
         print(user)
         if field.data != user.password:
             raise ValidationError(message)
-    return _correctPassword
+    return _CorrectPassword
 
-def optionalNotDriver():
+def OptionalIfNotDriver():
     message = 'Your license plate number must be between 2 and 10 characters'
 
-    def _optionalNotDriver(form, field):
+    def _OptionalIfNotDriver(form, field):
         if session['driver']==True and (len(field.data)<2 or len(field.data)>10):
             raise ValidationError(message)
-    return _optionalNotDriver
+    return _OptionalIfNotDriver
  
 class RegisterFormFactory(FlaskForm):
-    netid = StringField("NetID:", validators = [InputRequired(message='You must enter your NetID'), ExistingNetid(), Length(min=4, max=7, message='Your NetID must be between 4 and 7 characters')])
+    netid = StringField("NetID:", validators = [InputRequired(message='You must enter your NetID'), CheckIfExistingNetid(), Length(min=4, max=7, message='Your NetID must be between 4 and 7 characters')])
     name = StringField("Name:", validators = [InputRequired(message='You must enter your name'), Length(min=5, max=50, message='Your name must be between 5 and 50 characters')])
     duke_email = StringField("Duke Email:", validators = [InputRequired(message='You must enter your Duke email'), Email(message='You must enter a valid email address'),\
         Length(min=10, max=40, message='Your email must be between 10 to 40 characters'), Regexp('^[a-zA-Z0-9]+@duke.edu$', message = 'Please enter a valid Duke email address')])
-    #phone number should be a string field so you can check it's length- do later and do regex so only numbers
-    phone_number = IntegerField("Phone Number:", validators = [InputRequired(message='You must enter a valid phone number')])
+    phone_number = StringField("Phone Number:", validators = [InputRequired(message='You must enter a valid phone number'), Regexp('^[0-9]', message = 'Please enter only numbers for phone number'), Length(min=10, max=12, message='Your phone number must be between 10 and 12 characters')])
     password = PasswordField("Password:", validators = [InputRequired(message='You must enter a password'),\
         Length(min=5, max=100, message='Your password must be between 5 and 100 characters')])
     confirm_password = PasswordField("Confirm Password:", validators = [InputRequired(message='You must confirm your password'), ConfirmPassEqual()])
     affiliation_sel = SelectField("Affiliation:", validators = [InputRequired(message='You must select your affiliation')],\
-        choices = [('Graduate', 'Graduate'), ('Undergraduate', 'Undergraduate')])
-    #DELETE later
-    school = SelectField("School:", validators = [InputRequired(message='You must enter your school')], choices = [('Pratt', 'Pratt'), ('Trinity', 'Trinity'), ('Fuqua', 'Fuqua'), ('Law', 'Law'), ('Medicine', 'Medicine'), ('Nicholas', 'Nicholas'), ('Nursing', 'Nursing'), ('Other', 'Other')])
+        choices = [('Graduate', 'Graduate'), ('Undergraduate', 'Undergraduate')], default='Undergraduate')
     submit = SubmitField("Submit")      
 
 class RegisterDriverFormFactory(FlaskForm):
@@ -105,16 +102,13 @@ class ListRideFormFactory(FlaskForm):
     submit = SubmitField("Submit")
 
 class EditInfoFactory(FlaskForm):
-    #NOTE: make string and use regex for phone number 
-    phone_number = IntegerField("Phone Number:") # validators = [Length(min=7, max=10, message='not long enough')])- do later
+    phone_number = StringField("Phone Number:", validators = [InputRequired(message='You must enter a valid phone number'), Regexp('^[0-9]', message = 'Please enter only numbers for phone number'), Length(min=10, max=12, message='Your phone number must be between 10 and 12 characters')])
     affiliation = SelectField("Affiliation:", choices = [('No Change', 'No Change'), ('Graduate', 'Graduate'), ('Undergraduate', 'Undergraduate')])
-    license_plate_no = StringField("License Plate Number", validators = [optionalNotDriver()])#, Length(min=2, max=10, message='Your license plate number must be between 2 and 10 characters')])
+    license_plate_no = StringField("License Plate Number", validators = [OptionalIfNotDriver()])
     plate_state = SelectField("State", choices = [('No Change', 'No Change'), ('AL', 'AL'), ('AK', 'AK'), ('AZ', 'AZ'), ('AR', 'AR'), ('CA', 'CA'), ('CO', 'CO'), ('CT', 'CT'), ('DE', 'DE'), ('FL', 'FL'), ('GA', 'GA'), ('HI', 'HI'), ('ID', 'ID'), ('IL', 'IL'), ('IN', 'IN'), ('IA', 'IA'), ('KS', 'KS'), ('KY', 'KY'), ('LA', 'LA'), ('ME', 'ME'), ('MD', 'MD'), ('MA', 'MA'), ('MI', 'MI'), ('MN', 'MN'), ('MS', 'MS'), ('MO', 'MO'), ('MT', 'MT'), ('NE', 'NE'), ('NV', 'NV'), ('NH', 'NH'), ('NJ', 'NJ'), ('NM', 'NM'), ('NY', 'NY'), ('NC', 'NC'), ('ND', 'ND'), ('OH', 'OH'), ('OK', 'OK'), ('OR', 'OR'), ('PA', 'PA'), ('RI', 'RI'), ('SC', 'SC'), ('SD', 'SD'), ('TN', 'TN'), ('TX', 'TX'), ('UT', 'UT'), ('VT', 'VT'), ('VA', 'VA'), ('WA', 'WA'), ('WV', 'WV'), ('WI', 'WI'), ('WY', 'WY'), ('GU', 'GU'), ('PR', 'PR'), ('VI', 'VI')], default = 'No Change')
-    currentPassword = PasswordField("Current password needed to make changes:", validators = [InputRequired(message='You must enter your password to confirm changes'), correctPassword()])
+    currentPassword = PasswordField("Current password needed to make changes:", validators = [InputRequired(message='You must enter your password to confirm changes'), CorrectPassword()])
     password = PasswordField("New password:", validators = [Optional(), Length(min=5, max=100, message='Your password must be between 5 and 100 characters')])
     confirmPassword = PasswordField("Confirm Password:", validators = [Optional(), ConfirmPassEqual()]) 
-    #password = PasswordField("New password or enter current password to make changes:", validators = [InputRequired(message='Must enter password to make changes')])
-    #confirmPassword = PasswordField("Confirm Password:", validators = [InputRequired(message='Must confirm password')])
     deleteAccount = SelectField("Would you like to delete your account? This action cannot be undone.", choices = [('No', 'No'), ('Yes','Yes')])
     submit = SubmitField("Save Changes")
 
@@ -122,7 +116,6 @@ class RideNumberFactory(FlaskForm):
     ride_no = IntegerField("Ride number:", validators = [InputRequired(message='You must enter a ride number')])
     submit = SubmitField("Enter")   
 
-#maybe try to add time and date
 class EditRideFactory(FlaskForm):
     date = DateField("Departure Date:")
     earliest_departure = TimeField("Earliest Time of Departure:")
@@ -141,16 +134,8 @@ class ReserveRideFormFactory(FlaskForm):
     notes = StringField("Notes:", validators=[Optional()])
     submit = SubmitField("Request Ride")
 
-class EditRideTimeFactory(FlaskForm):
-    #earliest_departure = TimeField("Earliest Time of Departure:", validators = [InputRequired(message=' ')], format='%H:%M')
-    #latest_departure = TimeField("Latest Time of Departure:", validators = [InputRequired(message='You must enter the latest time of departure'), GreaterThan('earliest_departure')], format='%H:%M')
-    #latest_departure = TimeField("Latest Time of Departure:", validators = [InputRequired(message=' '), GreaterThan('earliest_departure')], format='%H:%M')
-    
-    earliest_departure = TimeField("Earliest Time of Departure:", validators=[InputRequired(message='You must enter an earliest departure time')], format='%H:%M')
-    latest_departure = TimeField("Latest Time of Departure:", validators=[InputRequired(message='You must enter a latest departure time'), GreaterThanEarliestDeparture()], format='%H:%M')
-    submit = SubmitField("Save")
-
 class LogInFactory(FlaskForm):
     netid = StringField("NetID:", validators= [InputRequired(message='You must enter your NetID')])
     password = PasswordField("Password:", validators= [InputRequired(message='You must enter your password')])
     submit = SubmitField("Log in")
+
