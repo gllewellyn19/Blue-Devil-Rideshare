@@ -3,45 +3,39 @@
 <div class="container-fluid text-center">    
     <div class="row content">
         <div class="col-sm-8 text-left"> 
-          {% if validRideNo == False %}
-            <h1>Enter Ride Number</h1>
-            <center>
-            <form action = "/rides/riders-netids"  onsubmit="return validateForm();" method="post">
-              <div style = font-size:14px; font-weight:bold; margin-left:150px;>
-              {{ form.csrf_token }}
-             
-              {{ form.ride_no.label }}<br>
-              {{ form.ride_no }}
-              <br>
-            </div>
-            <div style = font-size:20px; font-weight:bold; margin-left:150px;>
-            {{ form.submit }}
-            </div>
-            </form>
-            </center>
-          {% endif %}
 
-          {% if validRideNo %}
-            <h1>Contact info for riders of ride {{ rideNumber }}:</h1>
+            {% if userDrivingRide %}
+            <h1>Contact info for riders of ride {{ rideNo }}:</h1>
             <hr>
                 <div> 
-                  {% if reservations %}
-                    <h4><b> Reservations: </b></h4>
-                    <ul>
-                        {% for rev in reservations %}
-                            <li>Netid: {{ rev.rider_netid }}, Phone number: {{ rev.phone_number}}, Spots Needed: {{ rev.seats_needed }} </li>
-                        {% endfor %}
-                    </ul>
-                  {% endif %}
-                </div>
 
-              {% if reservations == None %}
-                <div>
-                  <h4><b>No one has reserved this ride. </b></h4>
-                </div>
-              {% endif %}
-              <br>
-          {% endif %}
+                  <!--Print the contact information for the users who reserved the ride, if applicable -->
+                
+                    {% if reservations %}
+                      <h4><b> Reservations: </b></h4>
+                      <ul>
+                          {% for rev in reservations %}
+                              <li>Netid: {{ rev.rider_netid }}, Phone number: {{ rev.phone_number}}, 
+                                Spots Needed: {{ rev.seats_needed }} </li>
+                          {% endfor %}
+                      </ul>
+                    {% endif %}
+                  </div>
+
+                {% if reservations == [] %}
+                  <div>
+                    <h4><b>No one has reserved this ride. </b></h4>
+                  </div>
+                {% endif %}
+                <br>
+            {% endif %}
+
+            {% if not userDrivingRide %}
+              <div>
+                <h4><b>This is not your ride and you cannot view this information. </b></h4>
+              </div>
+            {% endif %}
+
             
         </div>
     </div>

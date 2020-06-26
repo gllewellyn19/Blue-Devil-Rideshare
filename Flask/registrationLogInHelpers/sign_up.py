@@ -11,11 +11,11 @@ def create_account():
     signUpForm = forms.RegisterFormFactory()
 
     if signUpForm.validate_on_submit():
-        netid,name,duke_email,phone_number,password,affiliation=extract_info(signUpForm)
+        netid,name,duke_email,phone_number,affiliation,password=extract_info(signUpForm)
         if check_existing_user(netid):
             return redirect(url_for('rides.log_in_main'))
 
-        register_user(netid,name,duke_email,phone_number,password,affiliation)
+        register_user(netid,name,duke_email,phone_number,affiliation,password)
         return redirect(url_for('rides.log_in_main'))
         
     return render_template('registerLogInPages/sign-up.html', form=signUpForm)
@@ -28,7 +28,7 @@ def extract_info(form):
     phone_number = request.form['phone_number']
     password = request.form['password']
     affiliation = request.form['affiliation_sel']
-    return netid,name,duke_email,phone_number,password,affiliation
+    return netid,name,duke_email,phone_number,affiliation,password
 
 #returns true if the given netid already goes with an existing account
 def check_existing_user(netid):
@@ -39,17 +39,12 @@ def check_existing_user(netid):
     return False
 
 #inserts the user into the database
-def register_user(netid,name,duke_email,phone_number,password,affiliation):
-    #NOTE try to do this with prepare statement but not working
-    """db.session.execute('''PREPARE signUp (varchar, varchar, varchar, integer, varchar, varchar)\
+def register_user(netid,name,duke_email,phone_number,affiliation,password):
+    db.session.execute('''PREPARE SignUp (varchar, varchar, varchar, varchar, varchar, varchar)\
         AS INSERT INTO Rideshare_user VALUES ($1, $2, $3, $4, $5, $6);''')
-    newUser = db.session.execute('EXECUTE signUp(:netid, :name, :duke_email, :phone_number, :password, :affiliation)',\
-            {"netid":session['netid'], "name":name, "duke_email":duke_email, "phone_number":phone_number, "password":password,\
-            "affiliation":affiliation})
+    newUser = db.session.execute('EXECUTE SignUp(:netid, :name, :duke_email, :phone_number, :affiliation, :password)',\
+            {"netid":netid, "name":name, "duke_email":duke_email, "phone_number":phone_number, "affiliation":affiliation,\
+            "password":password})
     db.session.commit()
-    db.session.execute('DEALLOCATE signUp')"""
-    newUser = models.Rideshare_user(netid=netid, name=name, duke_email=duke_email, phone_number=phone_number, password=password,\
-        affiliation=affiliation)
-    db.session.add(newUser)
-    db.session.commit()
+    db.session.execute('DEALLOCATE SignUp')
     flash("Account successfully created.")

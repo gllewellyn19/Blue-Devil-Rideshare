@@ -4,16 +4,18 @@
     <div class="row content">
         <div class="col-sm-8 text-left"> 
             <center>
-                {% with messages = get_flashed_messages() %}
-                    {% if messages %}
-                        <ul class=flashes>
-                        {% for message in messages %}
-                            <h4><b> {{ message }}</b></h4>
-                        {% endfor %}
-                        </ul>
-                    {% endif %}
-                {% endwith %}
-          
+            <!--Print flashed messages-->
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <ul class=flashes>
+                    {% for message in messages %}
+                        <h4><b> {{ message }}</b></h4>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+            {% endwith %}
+
+            <!--Prompt the user based on the request they made (edit ride or reservation)-->
             {% if typeRide=='rev' %}
                 <h1>Enter the ride number for the reservation you would like to edit:</h1>
             {% endif %}
@@ -22,14 +24,15 @@
                 <h1>Enter the ride number for the ride you would like to edit:</h1>
             {% endif %}
             
+            <!--Form to collect the ride number and send to the function that verifies it-->
             <form action = "{{url_for('rides.verify_ride_main', type=typeRide)}}"  onsubmit="return validateForm();" method="post">
                 <div style = font-size:14px; font-weight:bold; margin-left:150px;>
                     {{ form.csrf_token }}
              
                     {{ form.ride_no.label }}<br>
-                     {{ form.ride_no }}
-                     <br>
-                     <br>
+                    {{ form.ride_no }}
+                    <br>
+                    <br>
                 </div>
                 <div style = font-size:20px; font-weight:bold; margin-left:150px;>
                     {{ form.submit }}

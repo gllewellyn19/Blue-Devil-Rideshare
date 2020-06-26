@@ -1,4 +1,4 @@
---SQL Queries
+--Sample SQL Queries
 
 --Specific Examples:
 --Rides to DC

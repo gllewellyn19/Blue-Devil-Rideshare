@@ -33,33 +33,33 @@ def reserve(rideNo, spots_needed):
 
 #returns true if the user is already driving a ride on that date (can't book a reservations)
 def check_rides_on_date(date):
-        myRidesOnDate=[]
-        db.session.execute('''PREPARE myRides (varchar, date) AS SELECT * FROM Ride WHERE driver_netid = $1 AND date= $2;''')
-        myRidesOnDate.extend(db.session.execute('EXECUTE myRides(:driver_netid, :date)', {"driver_netid":session['netid'], "date":date}))
-        db.session.execute('DEALLOCATE myRides')
-        return myRidesOnDate != []
+    myRidesOnDate=[]
+    db.session.execute('''PREPARE myRides (varchar, date) AS SELECT * FROM Ride WHERE driver_netid = $1 AND date= $2;''')
+    myRidesOnDate.extend(db.session.execute('EXECUTE myRides(:driver_netid, :date)', {"driver_netid":session['netid'], "date":date}))
+    db.session.execute('DEALLOCATE myRides')
+    return myRidesOnDate != []
     
 #returns true if the user already has a reservation on that date (can't book another)
 def check_revs_on_date(date):
-        myRevsOnDate=[]
-        db.session.execute('''PREPARE myRevs (varchar, date) AS SELECT * FROM Reserve rev WHERE rev.rider_netid = $1\
-            AND EXISTS (SELECT * FROM Ride r WHERE r.ride_no=rev.ride_no and r.date=$2);''')
-        myRevsOnDate.extend(db.session.execute('EXECUTE myRevs(:driver_netid, :date)', {"driver_netid":session['netid'], "date":date}))
-        db.session.execute('DEALLOCATE myRevs')
-        return myRevsOnDate != []
+    myRevsOnDate=[]
+    db.session.execute('''PREPARE myRevs (varchar, date) AS SELECT * FROM Reserve rev WHERE rev.rider_netid = $1\
+        AND EXISTS (SELECT * FROM Ride r WHERE r.ride_no=rev.ride_no and r.date=$2);''')
+    myRevsOnDate.extend(db.session.execute('EXECUTE myRevs(:driver_netid, :date)', {"driver_netid":session['netid'], "date":date}))
+    db.session.execute('DEALLOCATE myRevs')
+    return myRevsOnDate != []
 
 #updates the seats available in  the ride and creates the reservation
 def book_ride(ride, spots_needed, rideNo, notes):
-        #update seats available in ride
-        ride.seats_available = ride.seats_available - spots_needed
-        db.session.commit()
+    #update seats available in ride
+    ride.seats_available = ride.seats_available - spots_needed
+    db.session.commit()
 
-        #create entry in Reserve table
-        newEntry = models.Reserve(rider_netid = session['netid'], ride_no = rideNo, seats_needed = spots_needed, note = notes)
-        db.session.add(newEntry)
-        db.session.commit()
-        flash("Successfully booked. You can find the driver's netid on your account page. \
-            It is recommended you reach out to your driver for more information about exact pick up time/ location.")
+    #create entry in Reserve table
+    newEntry = models.Reserve(rider_netid = session['netid'], ride_no = rideNo, seats_needed = spots_needed, note = notes)
+    db.session.add(newEntry)
+    db.session.commit()
+    flash("Successfully booked. You can find the driver's netid on your account page. \
+        It is recommended you reach out to your driver for more information about exact pick up time/ location.")
 
 
 

@@ -18,14 +18,17 @@ def verify():
             if not rev: 
                 return redirect(url_for('rides.account_main'))
             else:
-                return render_template('accountPages/edit-reservation.html', reservation=rev,ride=ride, form=forms.EditReservationFactory())
+                return render_template('accountPages/edit-reservation.html', reservation=rev,ride=ride, form=forms.EditReservationFactory(),\
+                    userHasRev=True)
         
-        if typeRide=='ride':
+        if typeRide=='edit_ride' or typeRide=='rider_info_ride':
             ride=check_valid_ride(rideNo)
             if not ride:
                 return redirect(url_for('rides.account_main'))
-            else:
+            elif typeRide=='edit_ride':
                 return redirect(url_for('rides.edit_ride_main', rideNo=ride.ride_no)) 
+            else:
+                return redirect(url_for('rides.riders_netids_main', rideNo=ride.ride_no)) 
 
     return render_template('accountPages/verify-ride-number.html', typeRide=typeRide, form=formRideNo)
 

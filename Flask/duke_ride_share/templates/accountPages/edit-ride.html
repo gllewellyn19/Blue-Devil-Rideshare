@@ -7,7 +7,7 @@
             <center>
             <h1>Edit a Ride</h1>
             <hr>
-
+            <!--Print flashed messages-->
             {% with messages = get_flashed_messages() %}
                 {% if messages %}
                     <ul class=flashes>
@@ -18,45 +18,61 @@
                 {% endif %}
             {% endwith %}
 
-            {% for message in form.gas_price.errors %}
-                <div>{{ message }}</div>
-            {% endfor %}
-        
-              <form action = "{{url_for('rides.edit_ride_main', rideNo=ride.ride_no)}}"  onsubmit="return validateForm();" method="post">
-                <div style = font-size:14px; font-weight:bold; margin-left:150px;>
-                    {{ form.csrf_token }}
+            {% if userDrivingRide %}
 
-                    {{ form.date.label }}<br>
-                    {{ form.date }}
-                    <br>
+                <!--Print errors from validators-->
+                {% for message in form.gas_price.errors %}
+                    <div>{{ message }}</div>
+                {% endfor %}
 
-                    {{ form.earliest_departure.label }}<br>
-                    {{ form.earliest_departure }}
-                    <br>
+                {% for message in form.comments.errors %}
+                    <div>{{ message }}</div>
+                {% endfor %}
+            
+                <!--Form to collect information from the user about the ride they would like to edit- 
+                    sets the defualt values for the ride they are trying to edit-->
+                <form action = "{{url_for('rides.edit_ride_main', rideNo=ride.ride_no)}}"  onsubmit="return validateForm();" method="post">
+                    <div style = font-size:14px; font-weight:bold; margin-left:150px;>
+                        {{ form.csrf_token }}
 
-                    {{ form.latest_departure.label }}<br>
-                    {{ form.latest_departure }}
-                    <br>
+                        {{ form.date.label }}<br>
+                        {{ form.date }}
+                        <br>
 
-                    {{ form.gas_price.label }}<br>
-                    {{ form.gas_price(value=ride.gas_price) }}
-                    <br>
+                        {{ form.earliest_departure.label }}<br>
+                        {{ form.earliest_departure }}
+                        <br>
 
-                    {{ form.comments.label }}<br>
-                    {{ form.comments(value=ride.comments) }}
-                    <br>
+                        {{ form.latest_departure.label }}<br>
+                        {{ form.latest_departure }}
+                        <br>
 
-                    {{ form.cancel.label }}<br>
-                    {{ form.cancel(value='No') }}
-                    <br>
-                    <br>
+                        {{ form.gas_price.label }}<br>
+                        {{ form.gas_price(value=ride.gas_price)}}
+                        <br>
 
-                </div>
-                <div style = font-size:20px; font-weight:bold; margin-left:150px;>
-                    {{ form.submit }}
-                </div>
-              </form>
-          </center>
+                        {{ form.comments.label }}<br>
+                        {{ form.comments(value=ride.comments) }}
+                        <br>
+
+                        {{ form.cancel.label }}<br>
+                        {{ form.cancel(value='No') }}
+                        <br>
+                        <br>
+
+                    </div>
+                    <div style = font-size:20px; font-weight:bold; margin-left:150px;>
+                        {{ form.submit }}
+                    </div>
+                </form>
+                {% endif %}
+
+                {% if not userDrivingRide %}
+                    <div>
+                        <h4><b>This is not your ride and you cannot edit it. </b></h4>
+                    </div>
+                {% endif %}
+            </center>
         </div>
     </div>
 </div>

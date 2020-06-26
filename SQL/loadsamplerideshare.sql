@@ -1,3 +1,5 @@
+--some example values to put into the database
+
 INSERT INTO rideshare_user VALUES ('cas175', 'Calleigh Smith', 'cas175@duke.edu', 6467250830, 'Undergraduate', 'Trinity', 'abc123!');
 INSERT INTO rideshare_user VALUES ('mjb128', 'Meredith Brown', 'mjb128@duke.edu', 2025550149, 'Undergraduate', 'Trinity', '525613abc');
 INSERT INTO rideshare_user VALUES ('gal16', 'Grace Llewellyn', 'gal16@duke.edu', 2025550169, 'Undergraduate', 'Pratt', 'marley73');

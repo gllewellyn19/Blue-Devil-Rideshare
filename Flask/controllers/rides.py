@@ -76,6 +76,7 @@ def edit_info_main():
 def edit_ride_main():
     return edit_ride.edit()
 
+#calls the necessary functions after the ride number is verified 
 @bp.route('/verify-ride-number', methods=('GET', 'POST'))
 def verify_ride_main():
     return check_ride_num.verify()
@@ -85,7 +86,7 @@ def edit_rev_main():
     return edit_reservation.edit()
 
 @bp.route('/riders-netids', methods=('GET', 'POST'))
-def riders_netids():
+def riders_netids_main():
     return riders_contact_info.get_info()
 
 @bp.route('/past-rides')

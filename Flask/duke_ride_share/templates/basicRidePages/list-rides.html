@@ -8,6 +8,7 @@
         </div>
         <div class="col-sm-8 text-left"> 
             <center>
+            <!--Prints flashed messages-->
             <h1>List a Ride</h1>
             {% with messages = get_flashed_messages() %}
                 {% if messages %}
@@ -17,6 +18,7 @@
                 {% endif %}
             {% endwith %}
 
+            <!--Prints errors from form validators-->
             {% for message in form.gas_price.errors %}
                 <div><b><p style="color:red">{{ message }}</p></b></div>
             {% endfor %}
@@ -41,6 +43,11 @@
                 <div><b><p style="color:red">{{ message }}</p></b></div>    
             {% endfor %}
 
+            {% for message in form.comments.errors %}
+                <div><b><p style="color:red">{{ message }}</p></b></div>    
+            {% endfor %}
+
+            <!--Form to collect information about the ride being listed-->
             <form action = "/rides/list-rides"  onsubmit="return validateForm();" method="post">
                    <div style = font-size:14px; font-weight:bold; margin-left:150px;>
                    {{ form.csrf_token }}

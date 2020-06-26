@@ -18,11 +18,11 @@ CREATE TABLE Ride
  destination VARCHAR(50) NOT NULL CHECK(destination <> origin), 
  driver_netid VARCHAR(7) NOT NULL REFERENCES Driver(netid),
  date DATE NOT NULL, 
- earliest_departure TIME CHECK(earliest_time <= latest_time),
- latest_departure TIME CHECK (latest_time >= earliest_time),
+ earliest_departure TIME CHECK(earliest_departure <= latest_departure),
+ latest_departure TIME CHECK (latest_departure >= earliest_departure),
  seats_available INTEGER NOT NULL,
  max_seats_available INTEGER NOT NULL, 
- gas_price INTEGER,
+ gas_price INTEGER NOT NULL,
  comments VARCHAR(200));
 
 CREATE TABLE Reserve
@@ -34,6 +34,10 @@ CREATE TABLE Reserve
   PRIMARY KEY(rider_netid, ride_no),
   FOREIGN KEY (rider_netid) REFERENCES rideshare_user(netid),
   FOREIGN KEY (ride_no) REFERENCES Ride(ride_no));
+
+CREATE TABLE Driving_locations
+(--reservation_id SERIAL PRIMARY KEY,
+  location VARCHAR(100) NOT NULL);
 
 
 -- Triggers
@@ -75,27 +79,6 @@ CREATE TRIGGER TG_Not_enough_Seats
   BEFORE INSERT OR UPDATE ON Reserve
   FOR EACH ROW
   EXECUTE PROCEDURE TF_Not_enough_Seats();
-
-------
-
-CREATE FUNCTION TF_No_time_given() RETURNS TRIGGER AS $$
-BEGIN
-  IF (NEW.earliest_time IS NULL) THEN
-  SET NEW.earliest_time = '00:00:00';
-  END IF;
-  IF (NEW.latest_time IS NULL) THEN
-  SET NEW.latest_time = '23:59:59';
-  END IF;
-  RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER TG_No_time_given
-  AFTER INSERT OR UPDATE ON Ride
-  FOR EACH ROW
-  EXECUTE PROCEDURE TF_No_time_given();
-
-------
 
 
 CREATE FUNCTION TF_One_res_per_date() RETURNS TRIGGER AS $$
@@ -144,7 +127,7 @@ BEGIN
   IF EXISTS (SELECT * FROM Ride R
             WHERE NEW.driver_netid = R.driver_netid
             AND NEW.date = R.date
-            AND NEW.earliest_time < R.latest_time) THEN
+            AND NEW.earliest_departure < R.latest_departure) THEN
     RAISE EXCEPTION 'Cannot schedule two overlapping rides.';
     RETURN NULL;
   ELSE

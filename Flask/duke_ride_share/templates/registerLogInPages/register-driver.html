@@ -9,6 +9,7 @@
         <div class="col-sm-8 text-left"> 
             <center>
             <h1>Register as Driver</h1>
+            <!--Print flashed messages-->
             {% with messages = get_flashed_messages() %}
                 {% if messages %}
                     <ul class=flashes>
@@ -19,6 +20,7 @@
                 {% endif %}
             {% endwith %}
 
+            <!--Print errors from validators-->
             {% for message in form.license_no.errors %}
                 <div>{{ message }}</div>
             {% endfor %}
@@ -27,6 +29,7 @@
                 <div>{{ message }}</div>
             {% endfor %}
             
+            <!--Form to collect driver's information-->
             <form action = "/rides/register-driver"  onsubmit="return validateForm();" method="post">
                    <div style = font-size:14px; font-weight:bold; margin-left:150px;>
                    {{ form.csrf_token }}

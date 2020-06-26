@@ -10,6 +10,7 @@
         <div class="col-sm-8 text-center"> 
             <h1>Login</h1>
             <hr>
+            <!--Print flashed messages-->
             {% with messages = get_flashed_messages() %}
                 {% if messages %}
                     <ul class=flashes>
@@ -20,6 +21,7 @@
                 {% endif %}
             {% endwith %}
 
+            <!--Form to collect log in information- verified in log-in function-->
             <form action = "/rides/log-in"  onsubmit="return validateForm();" method="post">
                 <div style = font-size:14px; font-weight:bold; margin-left:150px;>
                 {{ form.csrf_token }}

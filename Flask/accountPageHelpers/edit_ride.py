@@ -7,23 +7,43 @@ import forms
 import models
 
 def edit():
-    #NOTE: edit seats available!! (when update data)
-    editRideForm=forms.EditRideFactory()
     rideNo=request.args.get('rideNo')
-    ride=set_defaults(rideNo, editRideForm)
+    userDrivingRide=check_user_driving_ride(rideNo)
+    editRideForm=forms.EditRideFactory()
+    ride=None
 
-    if editRideForm.validate_on_submit():
-        cancel = request.form['cancel']
+    #only perform the following if the logged in user is driving this ride
+    if userDrivingRide:
+        editRideForm=forms.EditRideFactory()
+        ride=set_defaults(rideNo, editRideForm)
 
-        if cancel == "Yes":
-            delete_ride(ride)
-        else:
-            #this means the ride failed to update- if it didn't fail then this function updated the ride
-            if not update_ride(ride, editRideForm):
-                return redirect(url_for('rides.edit_ride_main', rideNo=rideNo))
-        return redirect(url_for('rides.account_main'))
+        if editRideForm.validate_on_submit():
+            cancel = request.form['cancel']
 
-    return render_template('accountPages/edit-ride.html', form=editRideForm, ride=ride)
+            if cancel == "Yes":
+                delete_ride(ride)
+            else:
+                #this means the ride failed to update (time or date invalid)- if it didn't fail then this function updated the ride
+                if not update_ride(ride, editRideForm):
+                    return redirect(url_for('rides.edit_ride_main', rideNo=rideNo))
+            return redirect(url_for('rides.account_main'))
+
+    return render_template('accountPages/edit-ride.html', form=editRideForm, ride=ride, userDrivingRide=userDrivingRide)
+
+#double check the current user is the one driving the ride (preventing malicious input from people changing URLs)
+#return true if the current user is who is driving this ride
+def check_user_driving_ride(rideNo):
+    
+    #means the user isn't logged in and should not be able to perform this function
+    if session['netid']==None:
+        return False
+
+    #check if they are driving the ride number given
+    db.session.execute('''PREPARE Ride (integer, varchar) AS SELECT * FROM Ride WHERE ride_no = $1 AND driver_netid = $2;''')
+    ride=[]
+    ride.extend(db.session.execute('EXECUTE Ride(:ride_no, :netid)', {"ride_no":rideNo, "netid":session['netid']}))
+    db.session.execute('DEALLOCATE Ride')
+    return ride != []
 
 #sets the defaults for the ride form
 def set_defaults(rideNo, editRideForm):
@@ -53,10 +73,10 @@ def update_ride(ride, form):
     newgas_price = request.form['gas_price']
     newcomments = request.form['comments']
 
-    if newgas_price == '':
-        newgas_price = None
-    if newcomments=='':
-        newcomments = None
+    #if newgas_price == '':
+        #newgas_price = None
+    #if newcomments=='':
+        #newcomments = None
             
     ride.gas_price = newgas_price
     ride.comments = newcomments

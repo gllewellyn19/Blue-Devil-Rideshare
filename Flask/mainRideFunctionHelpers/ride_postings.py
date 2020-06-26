@@ -32,11 +32,7 @@ def extract_info(listForm):
     latest_departure = request.form['latest_departure']
     seats_available = request.form['seats_available']
     gas_price = request.form['gas_price']
-    if gas_price == '':
-        gas_price = None
     comments = request.form['comments']
-    if comments=='':
-        comments = None
     return destination,origin_city,date,earliest_departure,latest_departure,seats_available,gas_price,comments
 
 

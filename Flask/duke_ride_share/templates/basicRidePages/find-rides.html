@@ -7,6 +7,7 @@
         <div class="col-sm-2 sidenav">
             <!-- empty left sidebar -->
         </div>
+        <!--Prints flashed messages-->
         {% with messages = get_flashed_messages() %}
             {% if messages %}
                 <ul class=flashes>
@@ -21,6 +22,7 @@
 
         <div class="col-sm-8 text-left"> 
             <h1>Search for New Rides</h1>
+            <!--Prints errors from form validators-->
             {% for message in searchForm.destination.errors %}
                 <p><b>{{ message }}</b></p>
             {% endfor %}
@@ -32,6 +34,7 @@
                 You may search for rides on or before today's date.</p>
             <hr>
             
+            <!--Form to collect information about the ride the user is searching for-->
             <form method="post" action = "/rides/find-rides" onsubmit="return validateForm();">
                 {{ searchForm.csrf_token }}
 
@@ -50,10 +53,12 @@
             </form>
             <hr>
             <hr>
+
+            <!--If the user has already submitted the search form the results are posted below if results are found
+                (if not the user is told no results were found-->
             {% if results %}
             <div>
                 <h3> Results: </h3>
-                <!-- <p> Here they are {{results}} </p> -->
                 <table style="border-collapse: collapse; width: 100%">
                     <tr style="border: 1px solid black;">
                         <th style="width: 10%; border: 1px solid black; text-align: center"> Ride Number </th>
@@ -82,14 +87,12 @@
                         <td style="border: 1px solid black; padding: 3px"> {{ ride.comments }} </td>
                         <td><a href="{{url_for('rides.reserve_ride_main', rideNo=ride.ride_no, spots_needed=spots_needed)}}"> Reserve Ride </a></td>
                         <!--<td><form method="get"><button type="submit" 
-                            formaction="{{url_for('rides.reserve_ride_main', rideNo=item.ride_no, spots_needed=spots_needed)}}"> Reserve Ride </button></form></td>-->
+                            formaction="{{url_for('rides.reserve_ride_main', rideNo=ride.ride_no, spots_needed=spots_needed)}}"> Reserve Ride </button></form></td>-->
                         </tr>
                     {% endfor %}
                 </table>
             </div>
         </div>
-
-        
 
         {% endif %}
         <div class="col-sm-8 text-left"> 

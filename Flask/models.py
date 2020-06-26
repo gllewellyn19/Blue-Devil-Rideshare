@@ -24,13 +24,14 @@ class Ride(db.Model):
     destination = db.Column('destination', db.String(50))
     driver_netid = db.Column('driver_netid', db.String(7), db.ForeignKey('driver.netid'))
     date = db.Column('date', db.Date())
-    earliest_departure = db.Column('earliest_time', db.Time()) #save as departure and fix many other places
-    latest_departure = db.Column('latest_time', db.Time())
+    earliest_departure = db.Column('earliest_departure', db.Time()) #save as departure and fix many other places
+    latest_departure = db.Column('latest_departure', db.Time())
     seats_available = db.Column('seats_available', db.Integer())
     max_seats_available= db.Column('max_seats_available', db.Integer())
-    gas_price = db.Column('gas_price', db.Integer())
+    gas_price = db.Column('gas_price', db.Float())
     comments = db.Column('comments', db.String(200))
 
+#keeps track of reservations
 class Reserve(db.Model):
     __tablename__= 'reserve'
     # ride_no and rider_netid need to be foreign keys from the other tables
@@ -38,3 +39,7 @@ class Reserve(db.Model):
     rider_netid = db.Column('rider_netid', db.String(7), db.ForeignKey('rideshare_user.netid'), primary_key=True)
     seats_needed = db.Column('seats_needed', db.Integer())
     note = db.Column('note', db.String(200)) 
+
+class Driving_locations(db.Model):
+    __tablename__= 'driving_locations'
+    location = db.Column('location', db.String(100), primary_key=True)

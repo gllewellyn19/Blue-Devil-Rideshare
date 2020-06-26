@@ -5,10 +5,12 @@
         <div class="col-sm-8 text-left"> 
             <h1>Past Reservations: </h1>
             <hr>
+            
             {% if past_revs == [] %}
                 <h3>You do not have any past reservations</h3>
             {% endif %}
 
+            <!--Lists all the reservations the user has reserved in the past-->
             {% if past_revs != [] %}
                 <table style="width: 85%">
                     <tr style="border: 1px solid black;">

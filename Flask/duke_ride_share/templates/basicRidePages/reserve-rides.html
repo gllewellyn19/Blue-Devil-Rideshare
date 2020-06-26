@@ -7,6 +7,7 @@
         <div class="col-sm-2 sidenav">
             <!-- empty left sidebar -->
         </div>
+        <!--Print flashed messages-->
         {% with messages = get_flashed_messages() %}
             {% if messages %}
                 <ul class=flashes>
@@ -17,11 +18,20 @@
             {% endif %}
         {% endwith %}
 
+        <!--Print errors from validators (checks if note too long)-->
+        {% for message in reserveForm.notes.errors %}
+                <div>{{ message }}</div>
+        {% endfor %}
+
+        <!--Form that verifies the ride being reserved by printing the ride information again- 
+            allows the user to add comments to their reservation-->
         <div class="col-sm-8 text-left"> 
             <h1>Reserve Ride</h1>
             <hr>
-            <h3>Reserving ride from <b>{{ride.origin }}</b> to <b>{{ride.destination }}</b> on <b>{{ ride.date }}</b> for <b>{{spots_needed}}</b> spot(s). </h3>
-            <form id="reserveForm" method="post" action = "{{url_for('rides.reserve_ride_main', rideNo=ride.ride_no, spots_needed=spots_needed)}}" onsubmit="return validateForm();">
+            <h3>Reserving ride from <b>{{ride.origin }}</b> to <b>{{ride.destination }}</b> on <b>{{ ride.date }}</b>
+                for <b>{{spots_needed}}</b> spot(s). </h3>
+            <form id="reserveForm" method="post" action = "{{url_for('rides.reserve_ride_main', rideNo=ride.ride_no, 
+                        spots_needed=spots_needed)}}" onsubmit="return validateForm();">
                 {{ reserveForm.csrf_token }}
                 {{ reserveForm.notes.label }}
                 <br>

@@ -202,13 +202,6 @@
                     <h3><b>No Future Rides Reserved</b></h3>
                 </div>
             {% endif %}
-        
-                <!--variables passed in: user, ridesListed, ridesReserved.-->
-                <!--<li>Rides you are riding in: </li> here we update the status of the ride- delayed, cancelled, 
-                    ontime and how many riders and meeting spot/ drop off spot, comments, and driver
-                <li>Rides you have listed: </li> Same as information above
-                <li>Ride history: </li>Just list driver, time, origin, destination
-                buttons we want to have- edit password, edit rides -->
            
             <br>
             <br>           
@@ -216,9 +209,9 @@
         <!--In the side column, give links to all the edit, etc. pages-->
         <div class="col-sm-2 sidenav">
             <br> <a href="{{url_for('rides.edit_info_main')}}">Edit Information</a>
-            <br> <a href="{{url_for('rides.verify_ride_main', type='ride')}}">Edit Ride</a>
+            <br> <a href="{{url_for('rides.verify_ride_main', type='edit_ride')}}">Edit Ride</a>
             <br> <a href="{{url_for('rides.verify_ride_main', type='rev')}}">Edit Reservation</a>
-            <br> <a href="{{url_for('rides.riders_netids')}}">Contact Info of Riders who Reserved your Ride</a>
+            <br> <a href="{{url_for('rides.verify_ride_main', type='rider_info_ride')}}">Contact Info of Riders who Reserved your Ride</a>
             {% if driver %}
                 <br> <a href="{{url_for('rides.past_rides_main')}}">Past Rides</a>
             {% endif %}

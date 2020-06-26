@@ -17,6 +17,7 @@
                 {% endif %}
             {% endwith %}
             
+            <!--Print errors from validators-->
             {% for message in form.name.errors %}
                <div>{{ message }}</div>
             {% endfor %}
@@ -37,6 +38,11 @@
                <div>{{ message }}</div>
             {% endfor %}
 
+            {% for message in form.confirm_password.errors %}
+               <div>{{ message }}</div>
+            {% endfor %}
+
+            <!--Form to collect information from the user to create an account-->
             <form action = "/rides/sign-up" onsubmit="return validateForm();" method="post">
                    <div style = font-size:14px; font-weight:bold; margin-left:150px;>
                    {{ form.csrf_token }} 

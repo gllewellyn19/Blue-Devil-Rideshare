@@ -7,21 +7,27 @@ import forms
 import models
 
 def get_info():
-    form = forms.RideNumberFactory()
-    validRideNo = False
-    reservations = None
-    rideNumber = None
-    
-    if form.validate_on_submit():
-        rideNumber = request.form['ride_no']
-        ride = db.session.query(models.Ride).filter(models.Ride.ride_no == rideNumber).filter(models.Ride.driver_netid == session['netid']).first()
-        if (ride == None):
-            flash("Ride not found.")
-            return redirect(url_for('rides.account_main'))
-        else: 
-            validRideNo = True
-            reservations = db.session.query(models.Reserve).filter(models.Reserve.ride_no == ride.ride_no)
-            if reservations.first() == None:
-                reservations = None
+    rideNo=request.args.get('rideNo')
+    userDrivingRide=check_user_driving_ride(rideNo)
 
-    return render_template('accountPages/riders-netids.html', form=form, validRideNo = validRideNo, reservations=reservations, rideNumber=rideNumber)
+    db.session.execute('''PREPARE Reservations (integer) AS SELECT * FROM Reserve R, Rideshare_user U WHERE R.ride_no = $1 AND R.rider_netid = U.netid;''')
+    reservations = []
+    reservations.extend(db.session.execute('EXECUTE Reservations(:ride_no)', {"ride_no":rideNo}))
+    db.session.execute('DEALLOCATE Reservations')
+
+    return render_template('accountPages/riders-netids.html', reservations=reservations, rideNo=rideNo, userDrivingRide=userDrivingRide)
+
+#double check the current user is the one driving the ride (preventing malicious input from people changing URLs)
+#return true if the current user is who is driving this ride
+def check_user_driving_ride(rideNo):
+    
+    #means the user isn't logged in and should not be able to perform this function
+    if session['netid']==None:
+        return False
+
+    #check if they are driving the ride number given
+    db.session.execute('''PREPARE Ride (integer, varchar) AS SELECT * FROM Ride WHERE ride_no = $1 AND driver_netid = $2;''')
+    ride=[]
+    ride.extend(db.session.execute('EXECUTE Ride(:ride_no, :netid)', {"ride_no":rideNo, "netid":session['netid']}))
+    db.session.execute('DEALLOCATE Ride')
+    return ride != []
