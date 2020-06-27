@@ -48,7 +48,7 @@ def check_revs_on_date(date):
     db.session.execute('DEALLOCATE myRevs')
     return myRevsOnDate != []
 
-#updates the seats available in  the ride and creates the reservation
+#updates the seats available in the ride and creates the reservation
 def book_ride(ride, spots_needed, rideNo, notes):
     #update seats available in ride
     ride.seats_available = ride.seats_available - spots_needed

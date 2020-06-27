@@ -8,13 +8,12 @@ import models
 
 def edit():
     rideNo=request.args.get('rideNo')
-    userDrivingRide=check_user_driving_ride(rideNo)
     editRideForm=forms.EditRideFactory()
     ride=None
+    userDrivingRide=check_user_driving_ride(rideNo)
 
     #only perform the following if the logged in user is driving this ride
     if userDrivingRide:
-        editRideForm=forms.EditRideFactory()
         ride=set_defaults(rideNo, editRideForm)
 
         if editRideForm.validate_on_submit():
@@ -68,15 +67,11 @@ def update_ride(ride, form):
     newdate=request.form['date']
     newearliest_departure = request.form['earliest_departure']
     newlatest_departure = request.form['latest_departure']
+    #check to make sure latest departure after earliest departure and user doesn't have ride/reservation on the date
     if not check_times_valid(newearliest_departure, newlatest_departure) or not check_date_valid(newdate, ride.ride_no):
         return False
     newgas_price = request.form['gas_price']
     newcomments = request.form['comments']
-
-    #if newgas_price == '':
-        #newgas_price = None
-    #if newcomments=='':
-        #newcomments = None
             
     ride.gas_price = newgas_price
     ride.comments = newcomments

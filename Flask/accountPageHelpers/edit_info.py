@@ -21,6 +21,7 @@ def update():
 
         make_account_changes(user, newaffiliation, newpassword, newphone_number)
         
+        #update the driver information if the user is a driver
         if driver != None:
             update_driver_info(driver, plateNum, plateState)
         
@@ -47,6 +48,7 @@ def extract_info(driver, form):
 
 #deletes the users account and driver entry if they are a driver
 def delete_account(driver, user):
+    #delete driver entry in table if necessary
     if driver!=None:
         db.session.delete(driver)
         db.session.commit()

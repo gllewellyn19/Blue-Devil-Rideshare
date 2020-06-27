@@ -28,7 +28,7 @@ def account_info():
         reservations=reservations, rideToday=rideToday, revToday=revToday)
 
 #returns the upcoming rides in the ridesListed variable and if there is a ride on today's date it puts it in the rideToday variable
-#and removes it from the list
+#and removes it from the list of future rides
 def get_rides_listed(today):
     db.session.execute('''PREPARE RidesPosted (varchar, date) AS SELECT * FROM Ride WHERE driver_netid = $1\
         AND date >= $2 ORDER BY date ASC;''')
@@ -36,7 +36,7 @@ def get_rides_listed(today):
     ridesListed.extend(db.session.execute('EXECUTE RidesPosted(:driver_netid, :date)', {"driver_netid":session['netid'],\
         "date":today}))
 
-    #find any rides that are today from the rides listed-> they will be the first item in the list since sorted by date
+    #find if a ride is today from the rides listed-> it will be the first item in the list since sorted by date
     rideToday = None
     if ridesListed != []:
         firstRide = ridesListed[0]
@@ -55,7 +55,7 @@ def get_revs_listed(today):
     reservations.extend(db.session.execute('EXECUTE Reservations(:driver_netid, :date)', {"driver_netid":session['netid'],\
         "date":today}))
 
-    #find any reservations that are today from reservations-> they will be the first item in the list since sorted by date
+    #find if a reservation is today from reservations-> it will be the first item in the list since sorted by date
     revToday = None
     if reservations != []:
         firstRev = reservations[0]

@@ -12,6 +12,7 @@ def sign_in():
         password = request.form['password']
         user = models.Rideshare_user.query.filter_by(netid=netid).first()
 
+        #warn the user if log in not correct or no user found with that netid
         if not user or not (user.password==password):
             flash('Invalid Credentials. Please try again.')
             return redirect(url_for('rides.log_in_main'))
@@ -21,6 +22,7 @@ def sign_in():
             
     return render_template('registerLogInPages/log-in.html', form=logInForm)
 
+#sets the boolean values in the session variable- can use this to get the netid later or determine if the user is a driver
 def set_session(netid):
     session['logged_in'] = True
     session['netid'] = netid

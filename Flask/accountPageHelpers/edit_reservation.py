@@ -18,7 +18,8 @@ def edit():
         if form.validate_on_submit():
             cancel,newSpots,comments=extract_info(form)
             ride = db.session.query(models.Ride).filter(models.Ride.ride_no == rideNumber).first()
-            reservation = db.session.query(models.Reserve).filter(models.Reserve.ride_no == rideNumber).filter(models.Reserve.rider_netid==session['netid']).first()
+            reservation = db.session.query(models.Reserve).filter(models.Reserve.ride_no == rideNumber)\
+                .filter(models.Reserve.rider_netid==session['netid']).first()
 
             if cancel == "Yes":
                 newSpots = cancel_reservation(reservation)
@@ -45,14 +46,14 @@ def check_user_has_rev(rideNumber):
     if session['netid']==None:
         return False
 
-    #check if they have the reservation from the reservation number given
+    #check if they have the reservation from the ride number given
     db.session.execute('''PREPARE Reservation (integer, varchar) AS SELECT * FROM Reserve WHERE ride_no = $1 AND rider_netid = $2;''')
     reservation=[]
     reservation.extend(db.session.execute('EXECUTE Reservation(:ride_no, :netid)', {"ride_no":rideNumber, "netid":session['netid']}))
     db.session.execute('DEALLOCATE Reservation')
     return reservation != []
 
-#extracts information from the form
+#extracts information from the form and defaults new spots to 0
 def extract_info(form):
     cancel = request.form['cancel']
     comments = request.form['comments']
@@ -60,7 +61,7 @@ def extract_info(form):
 
     return cancel,newSpots,comments
 
-#deletes the reservation and returns the number of spots it needed as a negative number to update the ride
+#deletes the reservation and returns the number of spots it needed as a negative number for updating the ride
 def cancel_reservation(reservation):
     newSpots = reservation.seats_needed*-1
     db.session.delete(reservation)

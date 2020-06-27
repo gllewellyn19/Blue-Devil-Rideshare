@@ -7,13 +7,13 @@ import models
 def register():
     registerDriverForm = forms.RegisterDriverFormFactory()
 
-    #the user can't already be a driver if they are accessing the register driver page, so don't need to check
     if registerDriverForm.validate_on_submit():
         netid = session['netid']
         license_no = request.form['license_no']
         license_plate_no = request.form['license_plate_no']
         plate_state = request.form['plate_state']
 
+        #check to make sure user isn't already driver as validator so can make user driver here
         make_driver(netid, license_no, license_plate_no, plate_state)
         return redirect(url_for('rides.list_rides_main'))
 
