@@ -150,7 +150,7 @@ class ListRideFormFactory(FlaskForm):
     seats_available = IntegerField("Number of Seats Available:",\
         validators = [InputRequired(message='You must enter the number of seats available'),\
         NumberRange(min=1, max=8, message='You must enter a number of seats available between 1 and 8.')])
-    gas_price = DecimalField("Gas Price (to divide amoung riders):", places=2, rounding=None,\
+    gas_price = DecimalField("Gas Price (to divide among riders):", places=2, rounding=None,\
         validators=[InputRequired(message='You must put a gas price and can change it later'),\
         NumberRange(min=0, message='Gas price must be a positive number or 0 if you don\'t want to charge your riders.')])
     comments = StringField("Comments (optional):", validators=[Optional(), Length(max=200,\
