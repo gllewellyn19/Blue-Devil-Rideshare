@@ -26,8 +26,7 @@ CREATE TABLE Ride
  comments VARCHAR(200));
 
 CREATE TABLE Reserve
-(--reservation_id SERIAL PRIMARY KEY,
-  rider_netid VARCHAR(7) NOT NULL,
+(rider_netid VARCHAR(7) NOT NULL,
   ride_no INTEGER NOT NULL, 
   seats_needed INTEGER NOT NULL,
   note VARCHAR(200), 
@@ -36,8 +35,10 @@ CREATE TABLE Reserve
   FOREIGN KEY (ride_no) REFERENCES Ride(ride_no));
 
 CREATE TABLE Driving_locations
-(--reservation_id SERIAL PRIMARY KEY,
-  location VARCHAR(100) NOT NULL);
+(location VARCHAR(100) NOT NULL UNIQUE PRIMARY KEY);
+
+CREATE TABLE Plate_states
+(state VARCHAR(10) NOT NULL UNIQUE PRIMARY KEY);
 
 
 -- Triggers

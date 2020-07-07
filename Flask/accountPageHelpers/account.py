@@ -8,15 +8,6 @@ import models
 
 def account_info():
 
-    """db.session.execute('''PREPARE NewLoc (varchar) AS INSERT INTO Driving_locations VALUES ($1);''')
-    newLoc = db.session.execute('EXECUTE NewLoc(:loc)',{"loc":"('Arlington, TX', 'Arlington, TX')"})
-    db.session.commit()
-    db.session.execute('DEALLOCATE NewLoc')
-
-    locations=db.session.query(models.Driving_locations).all()
-    locationsReturn=[]
-    for ele in locations:
-        locationsReturn.append(ele)"""
     user = db.session.query(models.Rideshare_user).filter(models.Rideshare_user.netid == session['netid']).first()
     driver = db.session.query(models.Driver).filter(models.Driver.netid == session['netid']).first()
     today = datetime.date.today()

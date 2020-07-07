@@ -42,6 +42,12 @@ class Reserve(db.Model):
     seats_needed = db.Column('seats_needed', db.Integer())
     note = db.Column('note', db.String(200)) 
 
+#used by forms page for the select fields for destination and origin
 class Driving_locations(db.Model):
     __tablename__= 'driving_locations'
     location = db.Column('location', db.String(100), primary_key=True)
+
+#used by the forms page for the select field for plate state
+class Plate_states(db.Model):
+    __tablename__= 'plate_states'
+    state = db.Column('state', db.String(10), primary_key=True)
