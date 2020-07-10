@@ -7,6 +7,9 @@ import forms
 import models
 
 def edit():
+    """
+    Edits a ride that the user is already driving
+    """
     rideNo=request.args.get('rideNo')
     editRideForm=forms.EditRideFactory()
     ride=None
@@ -29,9 +32,11 @@ def edit():
 
     return render_template('accountPages/edit-ride.html', form=editRideForm, ride=ride, userDrivingRide=userDrivingRide)
 
-#double check the current user is the one driving the ride (preventing malicious input from people changing URLs)
-#return true if the current user is who is driving this ride
 def check_user_driving_ride(rideNo):
+    """
+    Double check the current user is the one driving the ride (preventing malicious input from people changing URLs)
+    Return true if the current user is who is driving this ride
+    """
     
     #means the user isn't logged in and should not be able to perform this function
     if session['netid']==None:
@@ -44,16 +49,20 @@ def check_user_driving_ride(rideNo):
     db.session.execute('DEALLOCATE Ride')
     return ride != []
 
-#sets the defaults for the ride form
 def set_defaults(rideNo, editRideForm):
+    """
+    Sets the defaults for the ride form
+    """
     ride=db.session.query(models.Ride).filter(models.Ride.ride_no == rideNo).first()
     editRideForm.earliest_departure.data=ride.earliest_departure
     editRideForm.latest_departure.data=ride.latest_departure
     editRideForm.date.data=ride.date
     return ride
 
-#deletes the ride and all reservations for the ride
 def delete_ride(ride):
+    """
+    Deletes the ride and all reservations for the ride
+    """
     reservationsToDelete = db.session.query(models.Reserve).filter(models.Reserve.ride_no == ride.ride_no)
     for reservation in reservationsToDelete:
         db.session.delete(reservation)
@@ -62,8 +71,10 @@ def delete_ride(ride):
     db.session.commit()
     flash("Ride cancelled.")
 
-#updates the ride after making sure the date and times are valid (returns false if they aren't)
 def update_ride(ride, form):
+    """
+    Updates the ride after making sure the date and times are valid (returns false if they aren't)
+    """
     newdate=request.form['date']
     newearliest_departure = request.form['earliest_departure']
     newlatest_departure = request.form['latest_departure']
@@ -82,15 +93,19 @@ def update_ride(ride, form):
     flash("Ride updated.")
     return True
 
-#checks to make sure the earliest departure is before the latest departure (returns true if valid)
 def check_times_valid(earliest_departure, latest_departure):
+    """
+    Checks to make sure the earliest departure is before the latest departure (returns true if valid)
+    """
     if earliest_departure > latest_departure:
         flash("Earliest departure must be before latest departure")
         return False
     return True
 
-#checks to make sure that the date is after today's date and driver doesn't have a ride on that day (returns true if valid)
 def check_date_valid(date, rideNo):
+    """
+    Checks to make sure that the date is after today's date and driver doesn't have a ride on that day (returns true if valid)
+    """
     if date < str(datetime.date.today()):
         flash("Date must be greater than or equal to "+ str(datetime.date.today()))
         return False
@@ -102,16 +117,20 @@ def check_date_valid(date, rideNo):
         return False
     return True
 
-#returns true if the driver is alredy driving a ride on the given date which means they can't drive another
 def check_rides_on_date(date, rideNo):
+    """
+    Returns true if the driver is alredy driving a ride on the given date which means they can't drive another
+    """
     ridesOnDate=[]
     db.session.execute('''PREPARE ridesOnDate (varchar, date) AS SELECT * FROM Ride WHERE driver_netid = $1 AND date= $2 AND ride_no!=$3;''')
     ridesOnDate.extend(db.session.execute('EXECUTE ridesOnDate(:driver_netid, :date, :ride_no)', {"driver_netid":session['netid'], "date":date, "ride_no":rideNo}))
     db.session.execute('DEALLOCATE ridesOnDate')
     return ridesOnDate!=[]
 
-#returns true if the driver already has a reservation on the given date which means they can't drive a ride too
 def check_revs_on_date(date):
+    """
+    Returns true if the driver already has a reservation on the given date which means they can't drive a ride too
+    """
     revsOnDate=[]
     db.session.execute('''PREPARE revsOnDate (varchar, date) AS SELECT * FROM Reserve rev WHERE rev.rider_netid = $1\
             AND EXISTS (SELECT * FROM Ride r WHERE r.ride_no=rev.ride_no and r.date=$2);''')

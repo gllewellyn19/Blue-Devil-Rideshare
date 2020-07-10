@@ -7,7 +7,10 @@ import forms
 import models
 
 def account_info():
-
+    """
+    Gets the information for the account page about the user and about the rides/resevrations they have today
+    or in the future
+    """
     user = db.session.query(models.Rideshare_user).filter(models.Rideshare_user.netid == session['netid']).first()
     driver = db.session.query(models.Driver).filter(models.Driver.netid == session['netid']).first()
     today = datetime.date.today()
@@ -18,9 +21,11 @@ def account_info():
     return render_template('accountPages/account.html', user=user, driver=driver, ridesListed=ridesListed,\
         reservations=reservations, rideToday=rideToday, revToday=revToday)
 
-#returns the upcoming rides in the ridesListed variable and if there is a ride on today's date it puts it in the rideToday variable
-#and removes it from the list of future rides
 def get_rides_listed(today):
+    """
+    Returns the upcoming rides in the ridesListed variable and if there is a ride on today's date it puts it in the rideToday variable
+    And removes it from the list of future rides
+    """
     db.session.execute('''PREPARE RidesPosted (varchar, date) AS SELECT * FROM Ride WHERE driver_netid = $1\
         AND date >= $2 ORDER BY date ASC;''')
     ridesListed = []
@@ -36,9 +41,11 @@ def get_rides_listed(today):
     db.session.execute('DEALLOCATE RidesPosted')
     return ridesListed,rideToday
 
-#returns the upcoming reservations in the reservations variable and if there is a reservation on today's date,
-#it puts it in the revToday variable and removes it from the list
 def get_revs_listed(today):
+    """
+    Returns the upcoming reservations in the reservations variable and if there is a reservation on today's date,
+    It puts it in the revToday variable and removes it from the list
+    """
     db.session.execute('''PREPARE Reservations (varchar, date) AS SELECT * FROM Reserve R1, Ride R2\
         WHERE R1.rider_netid = $1 AND R1.ride_no = R2.ride_no AND date >= $2 ORDER BY date ASC;''')
 

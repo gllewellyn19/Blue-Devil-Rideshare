@@ -7,6 +7,10 @@ import models
 import forms
 
 def create_account():
+    """
+    Handles the user signing up to create an account
+    Redirects them to the log in page with a message after if successful
+    """
     signUpForm = forms.RegisterFormFactory()
 
     if signUpForm.validate_on_submit():
@@ -17,8 +21,10 @@ def create_account():
         
     return render_template('registerLogInPages/sign-up.html', form=signUpForm)
 
-#extracts the data from the form and puts it into variables to return
 def extract_info(form):
+    """
+    Extracts the data from the form and puts it into variables to return
+    """
     netid = request.form['netid']
     name = request.form['name']
     duke_email = request.form['duke_email']
@@ -27,8 +33,10 @@ def extract_info(form):
     affiliation = request.form['affiliation_sel']
     return netid,name,duke_email,phone_number,affiliation,password
 
-#inserts the user into the database
 def register_user(netid,name,duke_email,phone_number,affiliation,password):
+    """
+    Inserts the user into the database
+    """
     db.session.execute('''PREPARE SignUp (varchar, varchar, varchar, varchar, varchar, varchar)\
         AS INSERT INTO Rideshare_user VALUES ($1, $2, $3, $4, $5, $6);''')
     newUser = db.session.execute('EXECUTE SignUp(:netid, :name, :duke_email, :phone_number, :affiliation, :password)',\

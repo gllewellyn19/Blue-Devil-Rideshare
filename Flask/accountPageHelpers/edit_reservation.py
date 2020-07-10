@@ -7,6 +7,9 @@ import forms
 import models
 
 def edit():
+    """
+    Allows the user to edit or delete a reservation
+    """
     user = db.session.query(models.Rideshare_user).filter(models.Rideshare_user.netid == session['netid']).first()
     form = forms.EditReservationFactory()
     reservation = None
@@ -39,9 +42,11 @@ def edit():
     
     return render_template('accountPages/edit-reservation.html', user=user, form=form, reservation=reservation, userHasRev=userHasRev)
 
-#double check the current user has the given reservation (preventing malicious input from people changing URLs)
-#return true if the current user has the reservation
 def check_user_has_rev(rideNumber):
+    """
+    Double check the current user has the given reservation (preventing malicious input from people changing URLs)
+    Return true if the current user has the reservation
+    """
     #means the user isn't logged in and should not be able to perform this function
     if session['netid']==None:
         return False
@@ -53,24 +58,30 @@ def check_user_has_rev(rideNumber):
     db.session.execute('DEALLOCATE Reservation')
     return reservation != []
 
-#extracts information from the form and defaults new spots to 0
 def extract_info(form):
+    """
+    Extracts information from the form and defaults new spots to 0
+    """
     cancel = request.form['cancel']
     comments = request.form['comments']
     newSpots = 0
 
     return cancel,newSpots,comments
 
-#deletes the reservation and returns the number of spots it needed as a negative number for updating the ride
 def cancel_reservation(reservation):
+    """
+    Deletes the reservation and returns the number of spots it needed as a negative number for updating the ride
+    """
     newSpots = reservation.seats_needed*-1
     db.session.delete(reservation)
     db.session.commit()
     flash("Reservation cancelled.")
     return newSpots
 
-#update the reservation with the new spots needed 
 def update_reservation(reservation, updatedSpots, comments):
+    """
+    Update the reservation with the new spots needed 
+    """
     newSpots = updatedSpots - reservation.seats_needed
     reservation.seats_needed = updatedSpots
     reservation.note=comments
@@ -78,8 +89,10 @@ def update_reservation(reservation, updatedSpots, comments):
     flash("Reservation updated.")
     return newSpots
 
-#checks to see if enough spots in the ride for the new reservation
 def valid_new_rev(reservation, ride, updatedSpots):
+    """
+    Checks to see if enough spots in the ride for the new reservation
+    """
     if updatedSpots > ride.seats_available:
         flash("Not enough room in the ride for spots needed. Reservation not updated.")
         return False

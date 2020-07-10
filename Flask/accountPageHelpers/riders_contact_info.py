@@ -7,6 +7,9 @@ import forms
 import models
 
 def get_info():
+    """
+    Gets the contact information for the riders of the ride that the driver is riding
+    """
     rideNo=request.args.get('rideNo')
     userDrivingRide=check_user_driving_ride(rideNo)
 
@@ -17,9 +20,11 @@ def get_info():
 
     return render_template('accountPages/riders-netids.html', reservations=reservations, rideNo=rideNo, userDrivingRide=userDrivingRide)
 
-#double check the current user is the one driving the ride (preventing malicious input from people changing URLs)
-#return true if the current user is who is driving this ride
 def check_user_driving_ride(rideNo):
+    """
+    Double check the current user is the one driving the ride (preventing malicious input from people changing URLs)
+    Return true if the current user is who is driving this ride
+    """
     
     #means the user isn't logged in and should not be able to perform this function
     if session['netid']==None:

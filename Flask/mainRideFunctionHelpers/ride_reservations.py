@@ -8,6 +8,10 @@ import models
 
 
 def reserve(rideNo, spots_needed):
+    """
+    Handles the user reserving a ride- double checks there is enough spots in the ride
+    and that the user isn't driving a ride or has a reservation on that day
+    """
     reserveForm = forms.ReserveRideFormFactory()
     ride = db.session.query(models.Ride).filter(models.Ride.ride_no == rideNo).first()
 
@@ -31,16 +35,20 @@ def reserve(rideNo, spots_needed):
 
     return render_template('basicRidePages/reserve-rides.html', reserveForm=reserveForm, ride=ride, spots_needed=spots_needed)
 
-#returns true if the user is already driving a ride on that date (can't book a reservations)
 def check_rides_on_date(date):
+    """
+    Returns true if the user is already driving a ride on that date (can't book a reservations)
+    """
     myRidesOnDate=[]
     db.session.execute('''PREPARE myRides (varchar, date) AS SELECT * FROM Ride WHERE driver_netid = $1 AND date= $2;''')
     myRidesOnDate.extend(db.session.execute('EXECUTE myRides(:driver_netid, :date)', {"driver_netid":session['netid'], "date":date}))
     db.session.execute('DEALLOCATE myRides')
     return myRidesOnDate != []
     
-#returns true if the user already has a reservation on that date (can't book another)
 def check_revs_on_date(date):
+    """
+    Returns true if the user already has a reservation on that date (can't book another)
+    """
     myRevsOnDate=[]
     db.session.execute('''PREPARE myRevs (varchar, date) AS SELECT * FROM Reserve rev WHERE rev.rider_netid = $1\
         AND EXISTS (SELECT * FROM Ride r WHERE r.ride_no=rev.ride_no and r.date=$2);''')
@@ -48,8 +56,10 @@ def check_revs_on_date(date):
     db.session.execute('DEALLOCATE myRevs')
     return myRevsOnDate != []
 
-#updates the seats available in the ride and creates the reservation
 def book_ride(ride, spots_needed, rideNo, notes):
+    """
+    Updates the seats available in the ride and creates the reservation
+    """
     #update seats available in ride
     ride.seats_available = ride.seats_available - spots_needed
     db.session.commit()

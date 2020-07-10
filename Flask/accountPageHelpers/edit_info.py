@@ -7,6 +7,9 @@ import models
 import forms
 
 def update():
+    """
+    Updates the user's info from the accounts page
+    """
     editForm = forms.EditInfoFactory()
     user = db.session.query(models.Rideshare_user).filter(models.Rideshare_user.netid == session['netid']).first()
     driver = db.session.query(models.Driver).filter(models.Driver.netid == session['netid']).first()
@@ -30,9 +33,10 @@ def update():
 
     return render_template('accountPages/edit-info.html', user=user, driver=driver, editForm=editForm)
 
-
-#extracts the data from the form and stores it in variables 
 def extract_info(driver, form):
+    """
+    Extracts the data from the form and stores it in variables 
+    """
     newphone_number=request.form['phone_number']
     newaffiliation = request.form['affiliation']
     currentpassword = request.form['currentPassword']
@@ -46,8 +50,10 @@ def extract_info(driver, form):
         plateState = request.form['plate_state']
     return newphone_number,newaffiliation,currentpassword,newpassword,confirmpassword,plateNum,plateState
 
-#deletes the users account and driver entry if they are a driver
 def delete_account(driver, user):
+    """
+    Deletes the users account and driver entry if they are a driver
+    """
     #delete driver entry in table if necessary
     if driver!=None:
         db.session.delete(driver)
@@ -60,8 +66,10 @@ def delete_account(driver, user):
     session['logged_in']= False
     flash("Your account has been deleted.")
 
-#changes the affiliation, password and phone number of the users account 
 def make_account_changes(user, newaffiliation, newpassword, newphone_number):
+    """
+    Changes the affiliation, password and phone number of the users account 
+    """
     if newaffiliation != 'No Change':
         user.affiliation = newaffiliation
         
@@ -73,8 +81,10 @@ def make_account_changes(user, newaffiliation, newpassword, newphone_number):
     user.phone_number = newphone_number
     db.session.commit()
 
-#updates the driver information if the user is a driver (default values mean you can just update without checking for change)
 def update_driver_info(driver, plateNum, plateState):
+    """
+    Updates the driver information if the user is a driver (default values mean you can just update without checking for change)
+    """
     driver.license_plate_no = plateNum
     if plateState != 'No Change':
         driver.plate_state = plateState

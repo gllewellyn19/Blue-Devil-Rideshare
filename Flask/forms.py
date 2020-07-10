@@ -10,8 +10,10 @@ from database import db
 from flask import session
 import models
 
-#checks if the destination city is equal to the origin city
 def NotEqualTo():
+    """
+    Checks if the destination city is equal to the origin city
+    """
     message = 'Your destination city cannot be the same as your origin.'
 
     def _NotEqualTo(form, field):
@@ -20,8 +22,10 @@ def NotEqualTo():
 
     return _NotEqualTo
 
-#checks if the latest departure is later than the earliest departure
 def GreaterThanEarliestDeparture():
+    """
+    Checks if the latest departure is later than the earliest departure
+    """
     message = 'Your latest departure time must be after your earliest departure time'
     
     def _GreaterThanEarliestDeparture(form, field):
@@ -29,8 +33,10 @@ def GreaterThanEarliestDeparture():
             raise ValidationError(message)
     return _GreaterThanEarliestDeparture
 
-#checks if the confirm password is equal to the given password
 def ConfirmPassEqual():
+    """
+    Checks if the confirm password is equal to the given password
+    """
     message = 'Your confirm password must match your password'
 
     def _ConfirmPassEqual(form, field):
@@ -38,8 +44,10 @@ def ConfirmPassEqual():
             raise ValidationError(message)
     return _ConfirmPassEqual
 
-#checks if the given netid already exists so a user can't make an account with a netid that already exists
 def CheckIfExistingNetid():
+    """
+    Checks if the given netid already exists so a user can't make an account with a netid that already exists
+    """
     message = 'An account with this netID already exists. Please log in if this is your netID'
 
     def _CheckIfExistingNetid(form, field):
@@ -48,8 +56,10 @@ def CheckIfExistingNetid():
             raise ValidationError(message)
     return _CheckIfExistingNetid
 
-#checks if the user is already a driver which means they cannot fill out the register driver form
 def CheckIfExistingDriver():
+    """
+    Checks if the user is already a driver which means they cannot fill out the register driver form
+    """
     message = 'You are already a driver.'
 
     def _CheckIfExistingNetid(form, field):
@@ -58,9 +68,10 @@ def CheckIfExistingDriver():
             raise ValidationError(message)
     return _CheckIfExistingNetid
 
-
-#checks if the password the user entered matches the one we have for them
 def CorrectPassword():
+    """
+    Checks if the password the user entered matches the one we have for them
+    """
     message = 'The current password you entered does not match your password'
 
     def _CorrectPassword(form, field):
@@ -69,8 +80,10 @@ def CorrectPassword():
             raise ValidationError(message)
     return _CorrectPassword
 
-#only checks the license plate's length requirements if the user is a driver 
 def CheckLicenseIfNotDriver():
+    """
+    Only checks the license plate's length requirements if the user is a driver 
+    """
     message = 'Your license plate number must be between 2 and 10 characters'
 
     def _CheckLicenseIfNotDriver(form, field):
@@ -78,8 +91,10 @@ def CheckLicenseIfNotDriver():
             raise ValidationError(message)
     return _CheckLicenseIfNotDriver
 
-#returns city choices as an array of tuples for the select field destination or origin
 def GetLocations():
+    """
+    Returns city choices as an array of tuples for the select field destination or origin
+    """
     db.session.execute('''PREPARE Choices AS SELECT * FROM Driving_locations;''')
     choices = []
     choices.extend(db.session.execute('EXECUTE Choices'))
@@ -91,9 +106,11 @@ def GetLocations():
 
     return choicesAsTuples
 
-#returns plate states as an array of tuples for the select field plate state
-#adds no change to the array if being called by edit info that needs no change as an option
 def GetPlateStates(noChangeOption=False):
+    """
+    Returns plate states as an array of tuples for the select field plate state
+    Adds no change to the array if being called by edit info that needs no change as an option
+    """
     db.session.execute('''PREPARE States AS SELECT * FROM Plate_states;''')
     states = []
     states.extend(db.session.execute('EXECUTE States'))
@@ -107,11 +124,14 @@ def GetPlateStates(noChangeOption=False):
 
     return statesAsTuples
 
+"""
+Below are the flask forms used throughout the webpage to collect information from the users
+"""
 
-#below are the flask forms used throughout the webpage to collect information from the users
-
-#form for a new user to register
 class RegisterFormFactory(FlaskForm):
+    """
+    Form for a new user to register
+    """
     netid = StringField("NetID:", validators = [InputRequired(message='You must enter your NetID'), CheckIfExistingNetid(),\
         Length(min=4, max=7, message='Your NetID must be between 4 and 7 characters')])
     name = StringField("Name:", validators = [InputRequired(message='You must enter your name'), Length(min=5, max=50,\
@@ -131,8 +151,10 @@ class RegisterFormFactory(FlaskForm):
         choices = [('Graduate', 'Graduate'), ('Undergraduate', 'Undergraduate')], default='Undergraduate')
     submit = SubmitField("Submit")      
 
-#form for a current user to register as a driver
 class RegisterDriverFormFactory(FlaskForm):
+    """
+    Form for a current user to register as a driver
+    """
     license_no = StringField("License Number", validators = [InputRequired(message='You must enter your license number'),\
         Length(min=5, max=20, message='You must enter a license plate number that is between 5 and 20 characters'), CheckIfExistingDriver()])
     license_plate_no = StringField("License Plate Number", validators = [InputRequired(message='You must enter your license plate number'),\
@@ -147,8 +169,10 @@ class RegisterDriverFormFactory(FlaskForm):
     ('PR', 'PR'), ('VI', 'VI')], default = 'NC')'''
     submit = SubmitField("Submit") 
 
-#form for a user to search for new rides
 class SearchFormFactory(FlaskForm):
+    """
+    Form for a user to search for new rides
+    """
     origin_city = SelectField("Origin City:", choices = GetLocations())# default='Durham, NC')
     destination = SelectField("Destination City:", validators = [NotEqualTo()], choices = GetLocations())
     #origin_city = SelectField("Origin City:", coerce=str, choices = [('Albuquerque, NM', 'Albuquerque, NM'), ('Arlington, TX', 'Arlington, TX'), ('Asheville, NC', 'Asheville, NC'), ('Aspen, CO', 'Aspen, CO'), ('Atlanta, GA', 'Atlanta, GA'), ('Austin, TX', 'Austin, TX'), ('Baltimore, MD', 'Baltimore, MD'), ('Beaufort, NC', 'Beaufort, NC'), ('Boca Grande, FL', 'Boca Grande, FL'), ('Boston, MA', 'Boston, MA'), ('Cary, NC', 'Cary, NC'), ('Charlotte, NC', 'Charlotte, NC'), ('Chicago, IL', 'Chicago, IL'), ('Colorado Springs, CO', 'Colorado Springs, CO'), ('Columbus, OH', 'Columbus, OH'), ('Concord, NC', 'Concord, NC'), ('Dallas, TX', 'Dallas, TX'), ('Denver, CO', 'Denver, CO'), ('Detroit, MI', 'Detroit, MI'), ('Durham, NC', 'Durham, NC'), ('El Paso, TX', 'El Paso, TX'), ('Fayetteville, NC', 'Fayetteville, NC'), ('Fort Worth, TX', 'Fort Worth, TX'), ('Fresno, CA', 'Fresno, CA'), ('Greensboro, NC', 'Greensboro, NC'), ('Greenville, NC', 'Greenville, NC'), ('High Point, NC', 'High Point, NC'), ('Houston, TX', 'Houston, TX'), ('Indianapolis, IN', 'Indianapolis, IN'), ('Jacksonville, FL', 'Jacksonville, FL'), ('Kansas City, MO', 'Kansas City, MO'), ('Las Vegas, NV', 'Las Vegas, NV'), ('Long Beach, CA', 'Long Beach, CA'), ('Los Angeles, CA', 'Los Angeles, CA'), ('Louisville, KY', 'Louisville, KY'), ('Memphis, TN', 'Memphis, TN'), ('Mesa, AZ', 'Mesa, AZ'), ('Miami, FL', 'Miami, FL'), ('Milwaukee, WI', 'Milwaukee, WI'), ('Minneapolis, MN', 'Minneapolis, MN'), ('Myrtle Beach, SC', 'Myrtle Beach, SC'), ('Nashville, TN', 'Nashville, TN'), ('New Orleans, LA', 'New Orleans, LA'), ('New York, NY', 'New York, NY'), ('Oakland, CA', 'Oakland, CA'), ('Oklahoma City, OK', 'Oklahoma City, OK'), ('Omaha, NE', 'Omaha, NE'), ('Philadelphia, PA', 'Philadelphia, PA'), ('Phoenix, AZ', 'Phoenix, AZ'), ('Portland, OR', 'Portland, OR'), ('Raleigh, NC', 'Raleigh, NC'), ('Sacramento, CA', 'Sacramento, CA'), ('San Antonio, TX', 'San Antonio, TX'), ('San Diego, CA', 'San Diego, CA'), ('San Francisco, CA', 'San Francisco, CA'), ('San Jose, CA', 'San Jose, CA'), ('Seattle, WA', 'Seattle, WA'), ('Tucson, AZ', 'Tucson, AZ'), ('Tulsa, OK', 'Tulsa, OK'), ('Virginia Beach, VA', 'Virginia Beach, VA'), ('Washington, DC', 'Washington, DC'), ('Wichita, KS', 'Wichita, KS'), ('Wilmington, NC', 'Wilmington, NC'), ('Winston-Salem, NC', 'Winston-Salem, NC')], default = 'Durham, NC')
@@ -158,9 +182,11 @@ class SearchFormFactory(FlaskForm):
         format='%Y-%m-%d')
     spots_needed = IntegerField("Spots Needed:", validators=[InputRequired(message='Please enter spots needed')], default=1)
     submit = SubmitField("Search")
-
-#form for a driver to list a ride                                  
+                                
 class ListRideFormFactory(FlaskForm):
+    """
+    Form for a driver to list a ride  
+    """
     #origin_city = SelectField("Origin City:", coerce=str, choices = [('Albuquerque, NM', 'Albuquerque, NM'), ('Arlington, TX', 'Arlington, TX'), ('Asheville, NC', 'Asheville, NC'), ('Aspen, CO', 'Aspen, CO'), ('Atlanta, GA', 'Atlanta, GA'), ('Austin, TX', 'Austin, TX'), ('Baltimore, MD', 'Baltimore, MD'), ('Beaufort, NC', 'Beaufort, NC'), ('Boca Grande, FL', 'Boca Grande, FL'), ('Boston, MA', 'Boston, MA'), ('Cary, NC', 'Cary, NC'), ('Charlotte, NC', 'Charlotte, NC'), ('Chicago, IL', 'Chicago, IL'), ('Colorado Springs, CO', 'Colorado Springs, CO'), ('Columbus, OH', 'Columbus, OH'), ('Concord, NC', 'Concord, NC'), ('Dallas, TX', 'Dallas, TX'), ('Denver, CO', 'Denver, CO'), ('Detroit, MI', 'Detroit, MI'), ('Durham, NC', 'Durham, NC'), ('El Paso, TX', 'El Paso, TX'), ('Fayetteville, NC', 'Fayetteville, NC'), ('Fort Worth, TX', 'Fort Worth, TX'), ('Fresno, CA', 'Fresno, CA'), ('Greensboro, NC', 'Greensboro, NC'), ('Greenville, NC', 'Greenville, NC'), ('High Point, NC', 'High Point, NC'), ('Houston, TX', 'Houston, TX'), ('Indianapolis, IN', 'Indianapolis, IN'), ('Jacksonville, FL', 'Jacksonville, FL'), ('Kansas City, MO', 'Kansas City, MO'), ('Las Vegas, NV', 'Las Vegas, NV'), ('Long Beach, CA', 'Long Beach, CA'), ('Los Angeles, CA', 'Los Angeles, CA'), ('Louisville, KY', 'Louisville, KY'), ('Memphis, TN', 'Memphis, TN'), ('Mesa, AZ', 'Mesa, AZ'), ('Miami, FL', 'Miami, FL'), ('Milwaukee, WI', 'Milwaukee, WI'), ('Minneapolis, MN', 'Minneapolis, MN'), ('Myrtle Beach, SC', 'Myrtle Beach, SC'), ('Nashville, TN', 'Nashville, TN'), ('New Orleans, LA', 'New Orleans, LA'), ('New York, NY', 'New York, NY'), ('Oakland, CA', 'Oakland, CA'), ('Oklahoma City, OK', 'Oklahoma City, OK'), ('Omaha, NE', 'Omaha, NE'), ('Philadelphia, PA', 'Philadelphia, PA'), ('Phoenix, AZ', 'Phoenix, AZ'), ('Portland, OR', 'Portland, OR'), ('Raleigh, NC', 'Raleigh, NC'), ('Sacramento, CA', 'Sacramento, CA'), ('San Antonio, TX', 'San Antonio, TX'), ('San Diego, CA', 'San Diego, CA'), ('San Francisco, CA', 'San Francisco, CA'), ('San Jose, CA', 'San Jose, CA'), ('Seattle, WA', 'Seattle, WA'), ('Tucson, AZ', 'Tucson, AZ'), ('Tulsa, OK', 'Tulsa, OK'), ('Virginia Beach, VA', 'Virginia Beach, VA'), ('Washington, DC', 'Washington, DC'), ('Wichita, KS', 'Wichita, KS'), ('Wilmington, NC', 'Wilmington, NC'), ('Winston-Salem, NC', 'Winston-Salem, NC')], default = 'Durham, NC')
     origin_city = SelectField("Origin City:", choices = GetLocations())# default='Durham, NC')
     destination = SelectField("Destination City:", validators = [NotEqualTo()], choices = GetLocations())
@@ -182,8 +208,10 @@ class ListRideFormFactory(FlaskForm):
         message='Your comment can\'t be more than 200 characters')])
     submit = SubmitField("Submit")
 
-#form for a user to edit their personal information, including their license plate if they are a driver
 class EditInfoFactory(FlaskForm):
+    """
+    Form for a user to edit their personal information, including their license plate if they are a driver
+    """
     phone_number = StringField("Phone Number:", validators = [InputRequired(message='You must enter a valid phone number'),\
         Regexp('^[0-9]*$', message = 'Please enter only numbers for phone number'),\
         Length(min=10, max=12, message='Your phone number must be between 10 and 12 characters')])
@@ -201,13 +229,17 @@ class EditInfoFactory(FlaskForm):
         choices = [('No', 'No'), ('Yes','Yes')])
     submit = SubmitField("Save Changes")
 
-#this form to verifies if the ride number given is an actual ride/reservation affiliated with their account
 class RideNumberFactory(FlaskForm):
+    """
+    Form to verify if the ride number given is an actual ride/reservation affiliated with their account
+    """
     ride_no = IntegerField("Ride number:", validators = [InputRequired(message='You must enter a ride number')])
     submit = SubmitField("Enter")   
 
-#form for a driver to edit or delete their ride
 class EditRideFactory(FlaskForm):
+    """
+    Form for a driver to edit or delete their ride
+    """
     date = DateField("Departure Date:")
     earliest_departure = TimeField("Earliest Time of Departure:")
     latest_departure = TimeField("Latest Time of Departure:")
@@ -219,23 +251,28 @@ class EditRideFactory(FlaskForm):
     cancel = SelectField("Would you like to cancel this ride?", choices = [('No', 'No'), ('Yes', 'Yes')])
     submit = SubmitField("Save")
 
-#form for a user to edit or delete their reservation
 class EditReservationFactory(FlaskForm):
+    """
+    Form for a user to edit or delete their reservation
+    """
     spots_needed = IntegerField("Spots Needed:", validators = [InputRequired(message='You must enter spots needed')]) 
     comments = StringField("Comments (optional):", validators=[Optional(), Length(max=200,\
         message='Your comment can\'t be more than 200 characters')])
     cancel = SelectField("Would you like to cancel your reservation for this ride?", choices = [('No', 'No'), ('Yes', 'Yes')])
     submit = SubmitField("Save")
 
-#form for a user to reserve a ride
 class ReserveRideFormFactory(FlaskForm):
+    """
+    Form for a user to reserve a ride
+    """
     notes = StringField("Notes:", validators=[Optional(), Length(max=200,\
         message='Your note can\'t be more than 200 characters')])
     submit = SubmitField("Request Ride")
 
-#form for a user to log into the page
 class LogInFactory(FlaskForm):
+    """
+    Form for a user to log into the page
+    """
     netid = StringField("NetID:", validators= [InputRequired(message='You must enter your NetID')])
     password = PasswordField("Password:", validators= [InputRequired(message='You must enter your password')])
     submit = SubmitField("Log in")
-

@@ -7,6 +7,10 @@ import forms
 import models
 
 def verify():
+    """
+    Makes sure the user is driving a ride or has the reservation reserved 
+    (to make sure they are editing a ride/ reservation they can edit)
+    """
     formRideNo = forms.RideNumberFactory()
     typeRide = request.args.get('type')
     if formRideNo.validate_on_submit():
@@ -34,9 +38,11 @@ def verify():
 
     return render_template('accountPages/verify-ride-number.html', typeRide=typeRide, form=formRideNo)
 
-#checks to see if the ride number entered is a ride and if the user has a reservation with that ride
-#returns None for reservation if not 
 def check_valid_rev(rideNo):
+    """
+    Checks to see if the ride number entered is a ride and if the user has a reservation with that ride
+    Returns None for reservation if not 
+    """
     reservation=db.session.query(models.Reserve).filter(models.Reserve.ride_no==rideNo).filter(models.Reserve.rider_netid==session['netid']).first()
     ride=db.session.query(models.Ride).filter(models.Ride.ride_no==rideNo).first()
     if reservation == None:
@@ -48,8 +54,10 @@ def check_valid_rev(rideNo):
     else:
         return reservation, ride
 
-#check to see if the user posted the ride for the given ride number
 def check_valid_ride(rideNo):
+    """
+    Check to see if the user posted the ride for the given ride number
+    """
     ride=db.session.query(models.Ride).filter(models.Ride.ride_no==rideNo).filter(models.Ride.driver_netid==session['netid']).first()
     if ride == None:
         flash("Ride not found.")

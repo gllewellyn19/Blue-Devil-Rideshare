@@ -5,6 +5,10 @@ import forms
 import models
 
 def register():
+    """
+    Handles the user registering to be a driver so they can post rides
+    Redirects to the post rides page with a message if successful
+    """
     registerDriverForm = forms.RegisterDriverFormFactory()
 
     if registerDriverForm.validate_on_submit():
@@ -19,8 +23,10 @@ def register():
 
     return render_template('registerLogInPages/register-driver.html', form=registerDriverForm)
 
-#adds the user to database of drivers
 def make_driver(netid, license_no, license_plate_no, plate_state):
+    """
+    Adds the user to database of drivers
+    """
     db.session.execute('''PREPARE Register (varchar, integer, varchar, varchar) AS INSERT INTO Driver VALUES ($1, $2, $3, $4);''')
     newDriver = db.session.execute('EXECUTE Register(:netid, :license_no, :license_plate_no, :plate_state)',\
             {"netid":netid, "license_no":license_no, "license_plate_no":license_plate_no, "plate_state":plate_state})

@@ -5,6 +5,9 @@ import forms
 import models
 
 def sign_in():
+    """
+    Handles the user signing into the web app
+    """
     logInForm = forms.LogInFactory()
 
     if logInForm.validate_on_submit():
@@ -22,8 +25,10 @@ def sign_in():
             
     return render_template('registerLogInPages/log-in.html', form=logInForm)
 
-#sets the boolean values in the session variable- can use this to get the netid later or determine if the user is a driver
 def set_session(netid):
+    """
+    Sets the boolean values in the session variable- can use this to get the netid later or determine if the user is a driver
+    """
     session['logged_in'] = True
     session['netid'] = netid
     driver = models.Driver.query.filter_by(netid=netid).first()
