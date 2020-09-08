@@ -14,6 +14,7 @@ def sign_in():
         netid = request.form['netid']
         password = request.form['password']
         user = models.Rideshare_user.query.filter_by(netid=netid).first()
+        affil = user.affiliation
 
         #warn the user if log in not correct or no user found with that netid
         if not user or not (user.password==password):
@@ -25,7 +26,7 @@ def sign_in():
             
     return render_template('registerLogInPages/log-in.html', form=logInForm)
 
-def set_session(netid):
+def set_session(netid, affil):
     """
     Sets the boolean values in the session variable- can use this to get the netid later or determine if the user is a driver
     """

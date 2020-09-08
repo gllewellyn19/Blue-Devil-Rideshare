@@ -33,27 +33,27 @@ bp = Blueprint('rides', __name__, url_prefix = '/rides', template_folder = 'temp
 def home_page():
     return render_template('basicRidePages/home.html')
 
-@bp.route('/find-rides', methods=('GET', 'POST'))
+@bp.route('/find-rides', methods=['GET', 'POST'])
 def find_rides_main():
     return search_rides.find()
 
-@bp.route('/reserve-rides', methods=('GET', 'POST'))    
+@bp.route('/reserve-rides', methods=['GET', 'POST'])    
 def reserve_ride_main():  
     return ride_reservations.reserve(request.args.get('rideNo'), int(request.args.get('spots_needed')))
 
-@bp.route('/list-rides', methods=['GET','POST'])
+@bp.route('/list-rides', methods=['GET', 'POST'])
 def list_rides_main():
     return ride_postings.list_ride()
 
-@bp.route('/sign-up', methods=['GET','POST'])
+@bp.route('/sign-up', methods=['GET', 'POST'])
 def sign_up_main():
     return sign_up.create_account()
 
-@bp.route('/register-driver', methods=['GET','POST'])
+@bp.route('/register-driver', methods=['GET', 'POST'])
 def register_driver_main():
     return make_driver.register()
 
-@bp.route('/log-in', methods=['GET','POST'])
+@bp.route('/log-in', methods=['GET', 'POST'])
 def log_in_main():
     return log_in.sign_in()
     
@@ -68,24 +68,24 @@ def log_out():
 def account_main():
     return account.account_info()
     
-@bp.route('/edit-info', methods=('GET', 'POST'))
+@bp.route('/edit-info', methods=['GET', 'POST'])
 def edit_info_main():
     return edit_info.update()
 
-@bp.route('/edit-ride', methods=('GET', 'POST'))
+@bp.route('/edit-ride', methods=['GET', 'POST'])
 def edit_ride_main():
     return edit_ride.edit()
 
 #calls the necessary functions after the ride number is verified 
-@bp.route('/verify-ride-number', methods=('GET', 'POST'))
+@bp.route('/verify-ride-number', methods=['GET', 'POST'])
 def verify_ride_main():
     return check_ride_num.verify()
     
-@bp.route('/edit-reservation', methods=('GET', 'POST'))
+@bp.route('/edit-reservation', methods=['GET', 'POST'])
 def edit_rev_main():
     return edit_reservation.edit()
 
-@bp.route('/riders-netids', methods=('GET', 'POST'))
+@bp.route('/riders-netids')
 def riders_netids_main():
     return riders_contact_info.get_info()
 

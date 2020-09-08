@@ -85,7 +85,7 @@
                         <td style="border: 1px solid black; padding: 3px"> {{ ride.max_seats_available }} </td>
                         <td style="border: 1px solid black; padding: 3px"> {{ ride.gas_price }} </td>
                         <td style="border: 1px solid black; padding: 3px"> {{ ride.comments }} </td>
-                        <td><a href="{{url_for('rides.reserve_ride_main', rideNo=ride.ride_no, spots_needed=spots_needed)}}"> Reserve Ride </a></td>
+                        <td><button onclick="window.location.href='{{url_for('rides.reserve_ride_main', rideNo=ride.ride_no, spots_needed=spots_needed)}}';">Reserve Ride </button></td>
                         <!--<td><form method="get"><button type="submit" 
                             formaction="{{url_for('rides.reserve_ride_main', rideNo=ride.ride_no, spots_needed=spots_needed)}}"> Reserve Ride </button></form></td>-->
                         </tr>

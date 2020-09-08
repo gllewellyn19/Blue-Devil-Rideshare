@@ -3,7 +3,7 @@ CREATE TABLE Rideshare_user
  name VARCHAR(50) NOT NULL,
  duke_email VARCHAR(40) NOT NULL,
  phone_number VARCHAR(12) NOT NULL,
- affiliation VARCHAR(20) NOT NULL,
+ affiliation VARCHAR(20) NOT NULL CHECK(affiliation IN c("Undergraduate", "Graduate")),
  password VARCHAR(100) NOT NULL);
 
 CREATE TABLE Driver

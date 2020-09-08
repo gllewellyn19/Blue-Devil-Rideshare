@@ -58,7 +58,7 @@
                     {% endif %}
                     
                     {{ editForm.affiliation.label }}<br>
-                    {{ editForm.affiliation }}
+                    {{ editForm.affiliation(value=user.affiliation) }}
                     <br>
     
                     {{ editForm.phone_number.label }}<br>

@@ -6,6 +6,10 @@ from datetime import date
 import forms
 import models
 
+import os
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
+
 def edit():
     """
     Allows the user to edit or delete a reservation
@@ -26,6 +30,8 @@ def edit():
 
             if cancel == "Yes":
                 newSpots = cancel_reservation(reservation)
+                email_driver_cancellation(user, ride, reservation)
+
             else:
                 updatedSpots = int(request.form['spots_needed'])
                 #only update spots if enough room in the ride
@@ -77,6 +83,27 @@ def cancel_reservation(reservation):
     db.session.commit()
     flash("Reservation cancelled.")
     return newSpots
+
+def email_driver_cancellation(user, ride, reservation):
+    print(user.name)
+    print(user.netid)
+    print(ride.ride_no)
+    message = Mail(
+    from_email='bluedevilrideshare@gmail.com',
+    to_emails = ride.driver_netid + '@duke.edu',
+    canceller_name = user.name,
+    canceller_netid = user.netid,
+    cancelled_ride_no = ride.ride_no,
+    subject='A rider just cancelled their reservation',
+    html_content='<p>Hello,<br><br>Rider {} ({}) has cancelled their reservation for your ride no. {}.<br><br>Thank you for being a driver for Blue Devil Rideshare,<br><br>-The Blue Devil Rideshare Team</p>'.format(canceller_name, canceller_netid, cancelled_ride_no))
+    try:
+        sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
+        response = sg.send(message)
+        print(response.status_code)
+        print(response.body)
+        print(response.headers)
+    except Exception as e:
+        print(e.message)
 
 def update_reservation(reservation, updatedSpots, comments):
     """
