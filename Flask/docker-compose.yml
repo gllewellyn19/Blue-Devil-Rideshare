@@ -4,6 +4,8 @@ services:
   web:
     build: .
     command: gunicorn --bind 0.0.0.0:8080 "duke_ride_share:create_app()"
+    environment:
+      PGPASSWORD: example
     ports:
       - "8080:8080"
   db:
