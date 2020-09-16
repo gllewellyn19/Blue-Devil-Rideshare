@@ -26,7 +26,7 @@ def sign_in():
             
     return render_template('registerLogInPages/log-in.html', form=logInForm)
 
-def set_session(netid, affil):
+def set_session(netid):
     """
     Sets the boolean values in the session variable- can use this to get the netid later or determine if the user is a driver
     """

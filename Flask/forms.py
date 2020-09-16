@@ -98,6 +98,8 @@ def GetLocations():
     db.session.execute('''PREPARE Choices AS SELECT * FROM Driving_locations;''')
     choices = []
     choices.extend(db.session.execute('EXECUTE Choices'))
+    print("="*20)
+    print(choices)
 
     choicesAsTuples=[]
     for choice in choices:
