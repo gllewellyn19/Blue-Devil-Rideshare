@@ -5,8 +5,6 @@ RUN apt-get update -y
 RUN apt-get install postgresql-client -y
 ADD requirements.txt .
 RUN pip install -r requirements.txt
-ADD load.sql .
-RUN load.sql
 ADD . . 
 EXPOSE 8080
 #CMD ["./start.sh"]

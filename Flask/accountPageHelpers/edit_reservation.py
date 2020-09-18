@@ -40,7 +40,6 @@ def edit():
                 else:
                     return render_template('accountPages/edit-reservation.html', reservation=reservation, ride=ride, form=form)
                 
-            #update the ride (subtracts the old seats needed if deleting reservation)
             ride.seats_available = ride.seats_available - newSpots
             db.session.commit()
             
@@ -57,7 +56,6 @@ def check_user_has_rev(rideNumber):
     if session['netid']==None:
         return False
 
-    #check if they have the reservation from the ride number given
     db.session.execute('''PREPARE Reservation (integer, varchar) AS SELECT * FROM Reserve WHERE ride_no = $1 AND rider_netid = $2;''')
     reservation=[]
     reservation.extend(db.session.execute('EXECUTE Reservation(:ride_no, :netid)', {"ride_no":rideNumber, "netid":session['netid']}))

@@ -30,7 +30,6 @@ def check_user_driving_ride(rideNo):
     if session['netid']==None:
         return False
 
-    #check if user is driving the ride number given- if not return false
     db.session.execute('''PREPARE Ride (integer, varchar) AS SELECT * FROM Ride WHERE ride_no = $1 AND driver_netid = $2;''')
     ride=[]
     ride.extend(db.session.execute('EXECUTE Ride(:ride_no, :netid)', {"ride_no":rideNo, "netid":session['netid']}))

@@ -58,13 +58,11 @@ def check_revs_on_date(date):
 
 def book_ride(ride, spots_needed, rideNo, notes):
     """
-    Updates the seats available in the ride and creates the reservation
+    Updates the seats available in the ride and creates the reservation for the reserve table
     """
-    #update seats available in ride
     ride.seats_available = ride.seats_available - spots_needed
     db.session.commit()
 
-    #create entry in Reserve table
     newEntry = models.Reserve(rider_netid = session['netid'], ride_no = rideNo, seats_needed = spots_needed, note = notes)
     db.session.add(newEntry)
     db.session.commit()
