@@ -152,4 +152,3 @@ ON ride(driver_netid);
 
 CREATE INDEX idx_reserve_rider_netid
 ON reserve(rider_netid);
-

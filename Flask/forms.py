@@ -91,11 +91,11 @@ def CheckLicenseIfNotDriver():
             raise ValidationError(message)
     return _CheckLicenseIfNotDriver
 
-def GetLocations():
+def getLocations():
     """
     Returns city choices as an array of tuples for the select field destination or origin
     """
-    db.session.execute('''PREPARE Choices AS SELECT * FROM Driving_locations;''')
+    """db.session.execute('''PREPARE Choices AS SELECT * FROM Driving_locations;''')
     choices = []
     choices.extend(db.session.execute('EXECUTE Choices'))
 
@@ -104,14 +104,15 @@ def GetLocations():
         choicesAsTuples.append((choice[0], choice[0]))
     db.session.execute('DEALLOCATE Choices')
 
-    return choicesAsTuples
+    return choicesAsTuples"""
+    return None
 
-def GetPlateStates(noChangeOption=False):
+def getPlateStates(noChangeOption=False):
     """
     Returns plate states as an array of tuples for the select field plate state
     Adds no change to the array if being called by edit info that needs no change as an option
     """
-    db.session.execute('''PREPARE States AS SELECT * FROM Plate_states;''')
+    """db.session.execute('''PREPARE States AS SELECT * FROM Plate_states;''')
     states = []
     states.extend(db.session.execute('EXECUTE States'))
 
@@ -122,7 +123,8 @@ def GetPlateStates(noChangeOption=False):
         statesAsTuples.append(('No Change', 'No Change'))
     db.session.execute('DEALLOCATE States')
 
-    return statesAsTuples
+    return statesAsTuples"""
+    return None
 
 """
 Below are the flask forms used throughout the webpage to collect information from the users
@@ -159,15 +161,15 @@ class RegisterDriverFormFactory(FlaskForm):
         Length(min=5, max=20, message='You must enter a license plate number that is between 5 and 20 characters'), CheckIfExistingDriver()])
     license_plate_no = StringField("License Plate Number", validators = [InputRequired(message='You must enter your license plate number'),\
         Length(min=2, max=10, message='You must enter a license plate number between 2 and 10 characters')])
-    plate_state = SelectField("State", choices = GetPlateStates(), default = 'NC')
+    plate_state = SelectField("State", choices = getPlateStates(), default = 'NC')
     submit = SubmitField("Submit") 
 
 class SearchFormFactory(FlaskForm):
     """
     Form for a user to search for new rides
     """
-    origin_city = SelectField("Origin City:", choices = GetLocations(), default='Durham, NC')
-    destination = SelectField("Destination City:", validators = [NotEqualTo()], choices = GetLocations())
+    origin_city = SelectField("Origin City:", choices = getLocations(), default='Durham, NC')
+    destination = SelectField("Destination City:", validators = [NotEqualTo()], choices = getLocations())
     date = DateField("Departure Date:", validators=[InputRequired(message='Please enter desired departure date'),\
         DateRange(min = datetime.date.today(),  message="Date must be greater than or equal to "+ str(datetime.date.today()))],\
         format='%Y-%m-%d')
@@ -178,8 +180,8 @@ class ListRideFormFactory(FlaskForm):
     """
     Form for a driver to list a ride  
     """
-    origin_city = SelectField("Origin City:", choices = GetLocations(), default='Durham, NC')
-    destination = SelectField("Destination City:", validators = [NotEqualTo()], choices = GetLocations())
+    origin_city = SelectField("Origin City:", choices = getLocations(), default='Durham, NC')
+    destination = SelectField("Destination City:", validators = [NotEqualTo()], choices = getLocations())
     date = DateField("Departure Date:", validators=[InputRequired(message='Please enter desired departure date'),\
         DateRange(min = datetime.date.today(), message="Date must be greater than or equal to "+ str(datetime.date.today()))],\
         format='%Y-%m-%d',)
@@ -207,7 +209,7 @@ class EditInfoFactory(FlaskForm):
     affiliation = SelectField("Affiliation:", choices = [('No Change', 'No Change'), ('Graduate', 'Graduate'),\
         ('Undergraduate', 'Undergraduate')])
     license_plate_no = StringField("License Plate Number", validators = [CheckLicenseIfNotDriver()])
-    plate_state = SelectField("State", choices = GetPlateStates(noChangeOption=True), default='No Change')#.append(('No Change', 'No Change')), default='No Change')
+    plate_state = SelectField("State", choices = getPlateStates(noChangeOption=True), default='No Change')#.append(('No Change', 'No Change')), default='No Change')
     #[('No Change', 'No Change'), ('AL', 'AL'), ('AK', 'AK'), ('AZ', 'AZ'), ('AR', 'AR'), ('CA', 'CA'), ('CO', 'CO'), ('CT', 'CT'), ('DE', 'DE'), ('FL', 'FL'), ('GA', 'GA'), ('HI', 'HI'), ('ID', 'ID'), ('IL', 'IL'), ('IN', 'IN'), ('IA', 'IA'), ('KS', 'KS'), ('KY', 'KY'), ('LA', 'LA'), ('ME', 'ME'), ('MD', 'MD'), ('MA', 'MA'), ('MI', 'MI'), ('MN', 'MN'), ('MS', 'MS'), ('MO', 'MO'), ('MT', 'MT'), ('NE', 'NE'), ('NV', 'NV'), ('NH', 'NH'), ('NJ', 'NJ'), ('NM', 'NM'), ('NY', 'NY'), ('NC', 'NC'), ('ND', 'ND'), ('OH', 'OH'), ('OK', 'OK'), ('OR', 'OR'), ('PA', 'PA'), ('RI', 'RI'), ('SC', 'SC'), ('SD', 'SD'), ('TN', 'TN'), ('TX', 'TX'), ('UT', 'UT'), ('VT', 'VT'), ('VA', 'VA'), ('WA', 'WA'), ('WV', 'WV'), ('WI', 'WI'), ('WY', 'WY'), ('GU', 'GU'), ('PR', 'PR'), ('VI', 'VI')], default = 'No Change')
     currentPassword = PasswordField("Current password needed to make changes:",\
         validators = [InputRequired(message='You must enter your password to confirm changes'), CorrectPassword()])

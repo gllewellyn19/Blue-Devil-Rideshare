@@ -14,7 +14,6 @@ def sign_in():
         netid = request.form['netid']
         password = request.form['password']
         user = models.Rideshare_user.query.filter_by(netid=netid).first()
-        affil = user.affiliation
 
         #warn the user if log in not correct or no user found with that netid
         if not user or not (user.password==password):

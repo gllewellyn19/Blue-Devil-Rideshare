@@ -28,7 +28,7 @@ def extract_info(form):
     netid = request.form['netid']
     name = request.form['name']
     duke_email = request.form['duke_email']
-    phone_number = request.form['phone_number']
+    phone_number = int(request.form['phone_number'])
     password = request.form['password']
     affiliation = request.form['affiliation_sel']
     return netid,name,duke_email,phone_number,affiliation,password
@@ -37,6 +37,8 @@ def register_user(netid,name,duke_email,phone_number,affiliation,password):
     """
     Inserts the user into the database
     """
+    print("in register user and type of phone number is ",type(phone_number))
+    print("="*50)
     db.session.execute('''PREPARE SignUp (varchar, varchar, varchar, varchar, varchar, varchar)\
         AS INSERT INTO Rideshare_user VALUES ($1, $2, $3, $4, $5, $6);''')
     newUser = db.session.execute('EXECUTE SignUp(:netid, :name, :duke_email, :phone_number, :affiliation, :password)',\

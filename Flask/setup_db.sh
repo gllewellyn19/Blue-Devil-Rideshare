@@ -1,2 +1,2 @@
 #!/bin/bash
-docker-compose exec web /srv/app/seed_db.sh
+docker-compose run web /srv/app/seed_db.sh
